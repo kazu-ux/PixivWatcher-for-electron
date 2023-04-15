@@ -1,26 +1,46 @@
 import { useState } from 'react';
 import './App.css';
+import PermanentDrawerLeft from './containers/permanent_drawer';
+import Header from './conponents/header';
+
+import { Stack } from '@mui/material';
+import { Routes, Route } from 'react-router-dom';
+import About from './pages/about';
+import Settings from './pages/settings';
+import IllustList from './containers/illust_list';
+import SearchForm from './containers/search_form';
+import SaveButton from './conponents/save_button';
+import { DRAWERWIDTH } from './consts/const';
 
 export const App = () => {
   const [count, setCount] = useState(0);
 
   return (
     <div className='container'>
-      <h1>{count}</h1>
-      <button onClick={() => setCount((count) => count + 1)}>Count</button>
-      <div>test</div>
-      <img
-        src='https://i.pximg.net/c/250x250_80_a2/img-master/img/2023/04/04/14/37/35/106856342_p0_square1200.jpg'
-        alt=''
-      />
-      <img
-        src='https://i.pximg.net/c/360x360_70/img-master/img/2020/06/18/21/17/28/82407783_p0_square1200.jpg'
-        alt=''
-      />
-      <img
-        src='https://i.pximg.net/img-original/img/2020/01/11/20/04/34/78841438_p0.jpg'
-        alt=''
-      />
+      <PermanentDrawerLeft />
+      <Routes>
+        <Route
+          path='/'
+          element={
+            <Stack
+              direction='column'
+              justifyContent='center'
+              alignItems='center'
+              spacing={2}
+              sx={{
+                width: `calc(100% - ${DRAWERWIDTH}px)`,
+                ml: `${DRAWERWIDTH}px`,
+              }}
+            >
+              <SearchForm></SearchForm>
+              <SaveButton></SaveButton>
+              <IllustList></IllustList>
+            </Stack>
+          }
+        />
+        <Route path='/about' element={<About />} />
+        <Route path='/settings' element={<Settings />} />
+      </Routes>
     </div>
   );
 };
