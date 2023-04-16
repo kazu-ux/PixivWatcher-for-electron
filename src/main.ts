@@ -1,5 +1,6 @@
 import path from 'node:path';
-import { BrowserWindow, app, session } from 'electron';
+import { BrowserWindow, app, session, ipcMain } from 'electron';
+import './database/ipc';
 
 app.whenReady().then(() => {
   const mainWindow = new BrowserWindow({
