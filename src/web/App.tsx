@@ -13,8 +13,6 @@ import SaveButton from './conponents/save_button';
 import { DRAWERWIDTH } from './consts/const';
 
 export const App = () => {
-  const [count, setCount] = useState(0);
-
   return (
     <div className='container'>
       <PermanentDrawerLeft />
