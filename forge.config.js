@@ -1,5 +1,13 @@
 module.exports = {
-  packagerConfig: {},
+  packagerConfig: {
+    ignore: [
+      '^\\/public$',
+      '^\\/src$',
+      '^\\/node_modules$',
+      '^\\/out$',
+      '^\\/[.].+',
+    ],
+  },
   rebuildConfig: {},
   makers: [
     {
