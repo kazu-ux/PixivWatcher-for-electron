@@ -27,7 +27,7 @@ import {
 import RemoveCircleOutlineIcon from '@mui/icons-material/RemoveCircleOutline';
 import { useAtom } from 'jotai';
 import { blockTagsAtom, blockUsersAtom, favoritesAtom } from '../atoms/atom';
-import { WorksData } from '../types/type';
+import { WorkData } from '../types/type';
 
 interface ExpandMoreProps extends IconButtonProps {
   expand: boolean;
@@ -44,7 +44,7 @@ const ExpandMore = styled((props: ExpandMoreProps) => {
   }),
 }));
 
-export default function IllustCard(illustData: WorksData[0]) {
+export default function IllustCard(illustData: WorkData) {
   const [expanded, setExpanded] = React.useState(false);
 
   const [blockUsers, setBlockUsers] = useAtom(blockUsersAtom);
@@ -175,7 +175,7 @@ export default function IllustCard(illustData: WorksData[0]) {
       <Collapse in={expanded} timeout='auto' unmountOnExit>
         <CardContent>
           <Stack direction={'column'} alignItems={'flex-start'}>
-            {tags.map((tag, index) => {
+            {tags.map((tag: string, index: number) => {
               //map内の要素にはkeyを付ける
               return (
                 <Stack key={index} direction={'row'} alignItems={'center'}>

@@ -22,8 +22,10 @@ import { Link } from 'react-router-dom';
 import { DRAWERWIDTH } from '../consts/const';
 import { useAtom } from 'jotai';
 import { watchWorksAtom, worksAtom } from '../atoms/atom';
-import { WorksData } from '../types/type';
+import { WorkData } from '../types/type';
 import EditMenu from '../conponents/edit_menu';
+import { Button } from '@mui/material';
+import { ipcRenderer } from 'electron';
 
 interface MainList {
   displayName: string;
@@ -50,7 +52,7 @@ export default function PermanentDrawerLeft() {
     },
   ];
 
-  const handleClick = (worksData: WorksData) => setWorksData(worksData);
+  const handleClick = (worksData: WorkData[]) => setWorksData(worksData);
   return (
     <Box sx={{ display: 'flex' }}>
       <CssBaseline />
@@ -62,6 +64,9 @@ export default function PermanentDrawerLeft() {
           <Typography variant='h6' noWrap component='div'>
             Pixiv Watcher
           </Typography>
+          <Button color='inherit' onClick={async () => {}}>
+            Login
+          </Button>
         </Toolbar>
       </AppBar>
       <Drawer
@@ -105,7 +110,7 @@ export default function PermanentDrawerLeft() {
                 <ListItemText
                   primary={watchWork.displayName}
                   onClick={() => {
-                    handleClick(watchWork.worksData);
+                    // handleClick(watchWork.WorkData);
                   }}
                 />
                 <EditMenu {...watchWork}></EditMenu>

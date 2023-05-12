@@ -1,10 +1,10 @@
-import { WorksData } from '../types/type';
+import { WorkData } from '../types/type';
 
 interface NestedObject {
   [key: string]: any;
 }
 
-function getPropertiesWithKey(obj: NestedObject, key: string): WorksData {
+function getPropertiesWithKey(obj: NestedObject, key: string): WorkData[] {
   let result: any[] = [];
 
   for (let prop in obj) {
@@ -22,7 +22,7 @@ const updateWatchWorks = async (key: string, url: string) => {
   const response = await fetch(url);
   if (response.ok) {
     try {
-      const rawJson: WorksData = await response.json();
+      const rawJson: WorkData[] = await response.json();
 
       const worksDataJsonArray = getPropertiesWithKey(rawJson, 'data');
       console.log(worksDataJsonArray);
@@ -35,11 +35,11 @@ const updateWatchWorks = async (key: string, url: string) => {
 };
 
 const fetchWorks = async (keyword: string) => {
-  const url = `https://www.pixiv.net/ajax/search/illustrations/${keyword}?word=${keyword}&order=date_d&mode=all&p=1&s_mode=s_tag&type=illust_and_ugoira&lang=ja`;
-  const response = await fetch(url);
+  const url = `https://www.pixiv.net/ajax/search/illustrations/${keyword}?word=${keyword}&order=date_d&mode=r18&p=1&s_mode=s_tag&type=illust_and_ugoira&lang=ja`;
+  const response = await fetch(url, { credentials: 'include' });
   if (response.ok) {
     try {
-      const rawJson: WorksData = await response.json();
+      const rawJson: WorkData[] = await response.json();
 
       const worksDataJsonArray = getPropertiesWithKey(rawJson, 'data');
 

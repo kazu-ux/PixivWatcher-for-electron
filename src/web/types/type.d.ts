@@ -1,7 +1,7 @@
 type UserData = { userId: string; userName: string };
 type RequestFlag = { requestFlag: boolean };
 
-export type WorksData = Array<{
+export type WorkData = {
   id: string;
   title: string;
   illustType?: number;
@@ -37,39 +37,39 @@ export type WorksData = Array<{
   marker: unknown;
   seriesId?: string;
   seriesTitle?: string;
-}>;
+};
 
 type SearchTop = {
   body: {
-    illustManga?: { data: WorksData };
-    novel?: { data: WorksData };
-    popular?: { recent: WorksData; permanent: WorksData };
+    illustManga?: { data: WorkData[] };
+    novel?: { data: WorkData[] };
+    popular?: { recent: WorkData[]; permanent: WorkData[] };
   };
 };
 
 type Illustrations = {
   body: {
-    illust?: { data: WorksData };
-    popular?: { recent: WorksData; permanent: WorksData };
-    thumbnails?: { illust: WorksData; novel: WorksData };
+    illust?: { data: WorkData[] };
+    popular?: { recent: WorkData[]; permanent: WorkData[] };
+    thumbnails?: { illust: WorkData[]; novel: WorkData[] };
   };
 };
 
 type Manga = {
   body: {
-    manga?: { data: WorksData };
-    popular?: { recent: WorksData; permanent: WorksData };
-    thumbnails?: { illust: WorksData; novel: WorksData };
+    manga?: { data: WorkData[] };
+    popular?: { recent: WorkData[]; permanent: WorkData[] };
+    thumbnails?: { illust: WorkData[]; novel: WorkData[] };
   };
 };
 
 type Novels = {
   body: {
-    novel?: { data: WorksData };
+    novel?: { data: WorkData[] };
     thumbnails?: {
-      illust: WorksData;
-      novel: WorksData;
-      novelSeries: WorksData;
+      illust: WorkData[];
+      novel: WorkData[];
+      novelSeries: WorkData[];
     };
   };
 };
@@ -87,6 +87,6 @@ export interface CandidatesEntity {
 
 export type WatchWork = {
   displayName: string;
-  worksData: WorksData;
+  WorkData: WorkData[];
   url: string;
 };

@@ -1,7 +1,6 @@
 import { IpcMainInvokeEvent, ipcMain } from 'electron';
 import Store from 'electron-store';
 import { IElectronAPI } from '../web/types/renderer';
-import { WorksData } from '../web/types/type';
 
 const storeData = new Store({ name: 'data' });
 

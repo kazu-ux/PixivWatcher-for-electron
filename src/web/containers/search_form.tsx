@@ -12,11 +12,6 @@ import { useAtom } from 'jotai';
 import { worksAtom, searchWordAtom } from '../atoms/atom';
 import { Candidates, CandidatesEntity } from '../types/type';
 
-const top100Films = [
-  { title: 'ドラえもん', year: 1994 },
-  { title: '名探偵コナン', year: 1995 },
-];
-
 const SearchForm = () => {
   const [inputText, setInputText] = useState('');
   const [candidates, setCandidates] = useState<CandidatesEntity[]>([]);
@@ -56,7 +51,7 @@ const SearchForm = () => {
   const handleSubmit = async () => {
     console.log(inputText);
     setSearchWord(inputText);
-    const worksData = await PixivAPI.fetchWorks(inputText);
+    const worksData = await window.pixivAPI.requestWorks(inputText);
     if (!worksData) return;
     setWorksData(worksData);
   };
