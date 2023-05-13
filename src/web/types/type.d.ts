@@ -89,4 +89,23 @@ export type WatchWork = {
   displayName: string;
   WorkData: WorkData[];
   url: string;
+  category: 'tag' | 'user';
 };
+
+type SearchTargetPath = 'artworks' | 'illustrations' | 'manga' | 'novel';
+type SearchTargetParameter =
+  | 'all'
+  | 'illust_and_ugoira'
+  | 'illust'
+  | 'manga'
+  | 'ugoira';
+type SearchMethodParameter = 's_tag' | 's_tag_full' | 's_tc';
+type TargetAgeParameter = 'all' | 'safe' | 'r18';
+type parameterKey = 'type' | 's_mode' | 'mode';
+
+interface SearchQuery {
+  searchWord: string;
+  searchTarget: [SearchTargetPath, SearchTargetParameter];
+  searchMethod: SearchMethodParameter;
+  targetAge: TargetAgeParameter;
+}
