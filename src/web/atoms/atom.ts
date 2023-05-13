@@ -2,7 +2,7 @@ import { atom } from 'jotai';
 import { atomWithStorage } from 'jotai/utils';
 import Store from 'electron-store';
 
-import { WatchWork, WorkData } from '../types/type';
+import { SearchQuery, WatchWork, WorkData } from '../types/type';
 
 window.storageAPI.getWatchWorks().then((value) => {
   console.log(value);
@@ -29,3 +29,10 @@ export const searchUrlAtom = atom<string>('');
 export const watchWorksAtom = atomWithStorage<WatchWork[]>('watchWorks', []);
 
 export const darkModeAtom = atomWithStorage('darkMode', false);
+
+export const searchQueryAtom = atom<SearchQuery>({
+  searchWord: '',
+  searchTarget: ['artworks', 'all'],
+  searchMethod: 's_tag',
+  targetAge: 'safe',
+});
