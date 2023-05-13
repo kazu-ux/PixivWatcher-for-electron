@@ -25,7 +25,7 @@ import { watchWorksAtom, worksAtom } from '../atoms/atom';
 import { WorkData } from '../types/type';
 import EditMenu from '../conponents/edit_menu';
 import { Button } from '@mui/material';
-import { ipcRenderer } from 'electron';
+import MyAccordion from './side_menu/accordion';
 
 interface MainList {
   displayName: string;
@@ -53,6 +53,7 @@ export default function PermanentDrawerLeft() {
   ];
 
   const handleClick = (worksData: WorkData[]) => setWorksData(worksData);
+
   return (
     <Box sx={{ display: 'flex' }}>
       <CssBaseline />
@@ -100,24 +101,8 @@ export default function PermanentDrawerLeft() {
           ))}
         </List>
         <Divider />
-        <List>
-          {watchWorks.map((watchWork, index) => (
-            <ListItem key={watchWork.displayName} disablePadding>
-              <ListItemButton>
-                <ListItemIcon>
-                  {index % 2 === 0 ? <InboxIcon /> : <MailIcon />}
-                </ListItemIcon>
-                <ListItemText
-                  primary={watchWork.displayName}
-                  onClick={() => {
-                    // handleClick(watchWork.WorkData);
-                  }}
-                />
-                <EditMenu {...watchWork}></EditMenu>
-              </ListItemButton>
-            </ListItem>
-          ))}
-        </List>
+
+        <MyAccordion></MyAccordion>
       </Drawer>
       <Box
         component='main'
