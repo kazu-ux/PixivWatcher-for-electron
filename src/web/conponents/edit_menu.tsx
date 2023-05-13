@@ -23,11 +23,11 @@ export default function EditMenu(props: WatchWork) {
   };
 
   const handleMenuItemClick = async () => {
-    const newWatchWorks = watchWorks.filter(
+    /*     const newWatchWorks = watchWorks.filter(
       (watchWork) => watchWork.displayName !== props.displayName
     );
     setWatchWorks(newWatchWorks);
-    setAnchorEl(null);
+    setAnchorEl(null); */
   };
 
   return (
