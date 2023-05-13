@@ -7,9 +7,7 @@ import {
   Select,
   MenuItem,
   Stack,
-  Button,
 } from '@mui/material';
-import createSearchURL from '../../utils/create_search_url';
 import { useAtom } from 'jotai';
 import { searchQueryAtom } from '../../atoms/atom';
 import {
@@ -18,7 +16,6 @@ import {
   SearchMethodParameter,
   TargetAgeParameter,
 } from '../../types/type';
-import SearchButton from './search_Button';
 
 interface SearchTarget {
   key: string;
@@ -170,7 +167,6 @@ export default function BasicSelect() {
           </Select>
         </FormControl>
       </Box>
-      <SearchButton></SearchButton>
     </Stack>
   );
 }
