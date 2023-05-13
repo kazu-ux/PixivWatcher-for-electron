@@ -6,6 +6,8 @@ import { WorkData } from './web/types/type';
 
 app.whenReady().then(async () => {
   const mainWindow = new BrowserWindow({
+    width: 2000,
+    height: 1000,
     webPreferences: {
       preload: path.resolve(__dirname, 'preload.js'),
     },
@@ -28,11 +30,27 @@ app.whenReady().then(async () => {
 
   mainWindow.webContents.openDevTools({ mode: 'detach' });
 
-  ipcMain.handle('requestWorks', async (event, value) => {
+  ipcMain.handle('requestWorks', async (event, searchURL) => {
+    interface NestedObject {
+      [key: string]: any;
+    }
+    function getPropertiesWithKey(obj: NestedObject, key: string): WorkData[] {
+      let result: any[] = [];
+
+      for (let prop in obj) {
+        if (prop === key) {
+          result.push(obj[prop]);
+        } else if (typeof obj[prop] === 'object') {
+          result = result.concat(getPropertiesWithKey(obj[prop], key));
+        }
+      }
+
+      return result.flat();
+    }
     let bufferStr = '';
 
     const request = net.request({
-      url: `https://www.pixiv.net/ajax/search/illustrations/${value}?word=${value}&order=date_d&mode=r18&p=1&s_mode=s_tag&type=illust_and_ugoira&lang=ja`,
+      url: searchURL,
       method: 'GET',
       credentials: 'include',
       // useSessionCookies: true,
@@ -41,7 +59,8 @@ app.whenReady().then(async () => {
       request.on('response', (response) => {
         console.log(response.statusCode, response.statusMessage);
         response.on('end', () => {
-          const works = JSON.parse(bufferStr).body.illust.data as WorkData[];
+          const rawJson: NestedObject = JSON.parse(bufferStr);
+          const works = getPropertiesWithKey(rawJson, 'data');
           resolve(works);
         });
         response.on('data', (chunk) => {
