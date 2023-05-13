@@ -8,7 +8,7 @@ import { Routes, Route } from 'react-router-dom';
 import About from './pages/about';
 import Settings from './pages/settings';
 import IllustList from './containers/illust_list';
-import SearchForm from './containers/search_form';
+import SearchForm from './containers/search_form/search_form';
 import SaveButton from './conponents/save_button';
 import { DRAWERWIDTH } from './consts/const';
 
