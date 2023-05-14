@@ -76,9 +76,6 @@ const targetAges: TargetAge[] = [
 
 export default function BasicSelect() {
   const [searchTarget, setSearchTarget] = useState<string>('0');
-  const [searchMethod, setSearchMethod] =
-    useState<SearchMethodParameter>('s_tag');
-  const [targetAge, setTargetAge] = useState<TargetAgeParameter>('all');
   const [searchQuery, setSearchQuery] = useAtom(searchQueryAtom);
 
   const handleSearchTargetChange = (event: SelectChangeEvent) => {
@@ -94,7 +91,6 @@ export default function BasicSelect() {
       ...searchQuery,
       searchMethod: event.target.value as SearchMethodParameter,
     });
-    setSearchMethod(event.target.value as SearchMethodParameter);
   };
 
   const handleTargetAgeChange = (event: SelectChangeEvent) => {
@@ -102,7 +98,6 @@ export default function BasicSelect() {
       ...searchQuery,
       targetAge: event.target.value as TargetAgeParameter,
     });
-    setTargetAge(event.target.value as TargetAgeParameter);
   };
 
   return (
@@ -133,7 +128,7 @@ export default function BasicSelect() {
           <Select
             labelId='demo-simple-select-label'
             id='demo-simple-select'
-            value={searchMethod}
+            value={searchQuery.searchMethod}
             label='SearchMethod'
             onChange={handleSearchMethodChange}
           >
@@ -153,7 +148,7 @@ export default function BasicSelect() {
           <Select
             labelId='demo-simple-select-label'
             id='demo-simple-select'
-            value={targetAge}
+            value={searchQuery.targetAge}
             label='targetAge'
             onChange={handleTargetAgeChange}
           >
