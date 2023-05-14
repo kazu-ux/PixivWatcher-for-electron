@@ -1,12 +1,11 @@
 import { useAtom } from 'jotai';
 import { useState } from 'react';
-import { watchWorksAtom } from '../../atoms/atom';
+import { watchWorksAtom, worksAtom } from '../../atoms/atom';
 import { Link } from 'react-router-dom';
-// import './accordion.css';
-
 const MyAccordion = () => {
   const [expanded, setExpanded] = useState(true);
   const [watchWorks] = useAtom(watchWorksAtom);
+  const [, setWorksData] = useAtom(worksAtom);
 
   const array = ['ドラえもん', 'のび太', '1234'];
 
@@ -35,8 +34,14 @@ const MyAccordion = () => {
         style={expanded ? { display: '' } : { display: 'none' }}
       >
         {watchWorks.map((watchWork, index) => (
-          <Link to={'/feed'}>
-            <div key={index}>{watchWork.displayName}</div>
+          <Link
+            to={'/feed'}
+            key={index}
+            onClick={() => {
+              setWorksData(watchWork.WorkData);
+            }}
+          >
+            <div>{watchWork.displayName}</div>
           </Link>
         ))}
       </div>

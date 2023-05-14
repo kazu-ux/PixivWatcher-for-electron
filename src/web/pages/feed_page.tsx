@@ -1,3 +1,5 @@
+import IllustList from '../containers/illust_list';
+
 export default function FeedPage() {
-  return <title>テスト</title>;
+  return <IllustList />;
 }
