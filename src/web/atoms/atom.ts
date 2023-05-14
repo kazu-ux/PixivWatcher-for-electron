@@ -27,6 +27,17 @@ export const favoritesAtom = atom<string[]>([]);
 export const searchWordAtom = atom<string>('');
 export const searchUrlAtom = atom<string>('');
 export const watchWorksAtom = atomWithStorage<WatchWork[]>('watchWorks', []);
+export const deleteWatchWorkAtom = atom(
+  (get) => get(watchWorksAtom),
+  (get, set, watchWorkDelete: WatchWork) => {
+    set(
+      watchWorksAtom,
+      get(watchWorksAtom).filter(
+        (watchWork) => watchWork.url !== watchWorkDelete.url
+      )
+    );
+  }
+);
 
 export const darkModeAtom = atomWithStorage('darkMode', false);
 
