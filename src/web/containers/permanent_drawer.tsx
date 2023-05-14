@@ -33,7 +33,7 @@ interface MainList {
   url: string;
 }
 
-export default function PermanentDrawerLeft() {
+export default function PermanentDrawerLeft(props: { body: JSX.Element }) {
   const [watchWorks] = useAtom(watchWorksAtom);
   const [, setWorksData] = useAtom(worksAtom);
 
@@ -101,7 +101,6 @@ export default function PermanentDrawerLeft() {
           ))}
         </List>
         <Divider />
-
         <MyAccordion></MyAccordion>
       </Drawer>
       <Box
@@ -109,6 +108,7 @@ export default function PermanentDrawerLeft() {
         sx={{ flexGrow: 1, bgcolor: 'background.default', p: 3 }}
       >
         <Toolbar />
+        {props.body}
       </Box>
     </Box>
   );
