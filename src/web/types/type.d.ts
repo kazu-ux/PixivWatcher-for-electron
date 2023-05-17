@@ -86,13 +86,15 @@ export interface CandidatesEntity {
 }
 
 export type WatchWork = {
-  [id: string]: {
-    readonly id: string;
-    displayName: string;
-    workData: WorkData[];
-    url: string;
-    category: 'tag' | 'user';
-  };
+  readonly id: string;
+  displayName: string;
+  workData: WorkData[];
+  url: string;
+  category: 'tag' | 'user';
+};
+
+export type WatchWorks = {
+  [id: string]: WatchWork;
 };
 
 export type viewedWorks = { [key: string]: string[] };
