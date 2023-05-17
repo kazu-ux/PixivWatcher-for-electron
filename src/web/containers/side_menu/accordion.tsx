@@ -2,20 +2,45 @@ import { useAtom } from 'jotai';
 import { useState } from 'react';
 import {
   deleteWatchWorkAtom,
+  updateWatchWorkAtom,
   viewedWorksAtom,
   worksAtom,
 } from '../../atoms/atom';
 import { Link } from 'react-router-dom';
 
 import DeleteIcon from '@mui/icons-material/Delete';
+import RefreshIcon from '@mui/icons-material/Refresh';
+import { WatchWork, WorkData } from '../../types/type';
 
 const MyAccordion = () => {
   const [expanded, setExpanded] = useState(true);
   const [watchWorks, deleteWatchWork] = useAtom(deleteWatchWorkAtom);
   const [, setWorksData] = useAtom(worksAtom);
   const [viewedWorks] = useAtom(viewedWorksAtom);
+  const [, updateWatchWork] = useAtom(updateWatchWorkAtom);
+  const [hover, setHover] = useState<{ [key: string]: boolean }>({});
 
   const handleExpandClick = () => setExpanded(!expanded);
+
+  const handleUpdateButton = async (watchWork: WatchWork) => {
+    const worksData = await window.pixivAPI.requestWorks(watchWork.url);
+    if (!worksData) return;
+    const newWorksData = [...watchWork.workData, ...worksData]
+      .filter(
+        (element, index, self) =>
+          self.findIndex((e) => e.id === element.id) === index
+      )
+      .slice()
+      .sort((a, b) => Number(b.id) - Number(a.id));
+    updateWatchWork(watchWork.id, { ...watchWork, workData: newWorksData });
+
+    const url = document.location.href;
+    if (!url.includes('/feed')) return;
+
+    const watchWorkId = url.split('/').at(-1);
+    if (watchWorkId !== watchWork.id) return;
+    setWorksData(newWorksData);
+  };
   return (
     <div className='category_container'>
       <div className='category_title' style={{ display: 'flex' }}>
@@ -58,13 +83,33 @@ const MyAccordion = () => {
               <div>{watchWork.displayName}</div>
             </Link>
             <div style={{ display: 'flex' }}>
-              <div className='unread_number_container'>
+              <div
+                className='unread_update_container'
+                onMouseEnter={() => setHover({ [watchWork.id]: true })}
+                onMouseLeave={() => setHover({ [watchWork.id]: false })}
+              >
                 <div>
-                  {
-                    watchWork.workData.filter(
-                      (data) => !viewedWorks[watchWork.id].includes(data.id)
-                    ).length
-                  }
+                  {hover[watchWork.id] ? (
+                    <div
+                      className='update_button'
+                      onClick={() => {
+                        handleUpdateButton(watchWork);
+                      }}
+                    >
+                      <RefreshIcon />
+                    </div>
+                  ) : (
+                    <div className='unread_number'>
+                      {
+                        watchWork.workData.filter(
+                          (data) =>
+                            !(viewedWorks[watchWork.id] ?? ['']).includes(
+                              data.id
+                            )
+                        ).length
+                      }
+                    </div>
+                  )}
                 </div>
               </div>
               <div

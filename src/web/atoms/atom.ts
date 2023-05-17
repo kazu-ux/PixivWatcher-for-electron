@@ -2,7 +2,13 @@ import { atom } from 'jotai';
 import { atomWithStorage } from 'jotai/utils';
 import Store from 'electron-store';
 
-import { SearchQuery, WatchWork, WorkData, viewedWorks } from '../types/type';
+import {
+  SearchQuery,
+  WatchWork,
+  WatchWorks,
+  WorkData,
+  viewedWorks,
+} from '../types/type';
 
 export const countAtom = atom(0);
 export const openAtom = atom(false);
@@ -24,7 +30,7 @@ export const viewedWorksAtom = atomWithStorage<viewedWorks>('viewedWorks', {});
 
 export const searchWordAtom = atom<string>('');
 export const searchUrlAtom = atom<string>('');
-export const watchWorksAtom = atomWithStorage<WatchWork>('watchWorks', {});
+export const watchWorksAtom = atomWithStorage<WatchWorks>('watchWorks', {});
 export const deleteWatchWorkAtom = atom(
   (get) => get(watchWorksAtom),
   (get, set, watchWorkId: string) => {
@@ -35,8 +41,13 @@ export const deleteWatchWorkAtom = atom(
     set(viewedWorksAtom, newViewedWorks);
   }
 );
-
-export const darkModeAtom = atomWithStorage('darkMode', false);
+export const updateWatchWorkAtom = atom(
+  null,
+  (get, set, watchWorkId: string, watchWork: WatchWork) => {
+    const newWatchWorks = { ...get(watchWorksAtom), [watchWorkId]: watchWork };
+    set(watchWorksAtom, newWatchWorks);
+  }
+);
 
 export const searchQueryAtom = atom<SearchQuery>({
   searchWord: '',
