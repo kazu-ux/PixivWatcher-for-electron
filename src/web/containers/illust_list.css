@@ -1,0 +1,8 @@
+.viewed {
+  opacity: 0.5;
+  filter: grayscale(100%);
+}
+
+.hidden {
+  display: none;
+}

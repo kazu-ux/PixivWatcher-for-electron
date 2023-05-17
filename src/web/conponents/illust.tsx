@@ -1,32 +1,25 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import { styled } from '@mui/material/styles';
 import Card from '@mui/material/Card';
-import CardHeader from '@mui/material/CardHeader';
-import CardMedia from '@mui/material/CardMedia';
 import CardContent from '@mui/material/CardContent';
 import CardActions from '@mui/material/CardActions';
 import Collapse from '@mui/material/Collapse';
-import Avatar from '@mui/material/Avatar';
 import IconButton, { IconButtonProps } from '@mui/material/IconButton';
 import Typography from '@mui/material/Typography';
-import { red } from '@mui/material/colors';
 import FavoriteIcon from '@mui/icons-material/Favorite';
-import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
 import ShareIcon from '@mui/icons-material/Share';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
-import MoreVertIcon from '@mui/icons-material/MoreVert';
 
-import {
-  Stack,
-  Link,
-  ImageListItem,
-  ImageListItemBar,
-  Grid,
-} from '@mui/material';
+import { Stack, Link, ImageListItem, ImageListItemBar } from '@mui/material';
 
 import RemoveCircleOutlineIcon from '@mui/icons-material/RemoveCircleOutline';
 import { useAtom } from 'jotai';
-import { blockTagsAtom, blockUsersAtom, favoritesAtom } from '../atoms/atom';
+import {
+  blockTagsAtom,
+  blockUsersAtom,
+  favoritesAtom,
+  viewedWorksAtom,
+} from '../atoms/atom';
 import { WorkData } from '../types/type';
 
 interface ExpandMoreProps extends IconButtonProps {
@@ -50,6 +43,7 @@ export default function IllustCard(illustData: WorkData) {
   const [blockUsers, setBlockUsers] = useAtom(blockUsersAtom);
   const [blockTags, setBlockTags] = useAtom(blockTagsAtom);
   const [favorites, setFavorites] = useAtom(favoritesAtom);
+  const [viewedWorks, setViewedWorks] = useAtom(viewedWorksAtom);
 
   const itemURL = `https://www.pixiv.net/artworks/${illustData.id}`;
   const baseUserURL = 'https://www.pixiv.net/users/';
@@ -84,13 +78,29 @@ export default function IllustCard(illustData: WorkData) {
     console.log(favorites);
   };
 
-  const hasDuplicateElements = (arr1: string[], arr2: string[]): boolean =>
-    arr1.some((element) => arr2.includes(element));
+  const handleWorkClick = () => {
+    const url = document.location.href;
+    if (!url.includes('/feed')) return;
+
+    const watchWorkId = url.split('/').at(-1);
+    if (!watchWorkId) return;
+    setViewedWorks({
+      ...viewedWorks,
+      ...{
+        [watchWorkId]: [...(viewedWorks[watchWorkId] ?? []), illustData.id],
+      },
+    });
+  };
 
   return (
     <Card sx={{ width: '250px' }}>
       <ImageListItem>
-        <Link href={itemURL} target='_blank' rel='noopener noreferrer nofollow'>
+        <Link
+          href={itemURL}
+          target='_blank'
+          rel='noopener noreferrer nofollow'
+          onClick={handleWorkClick}
+        >
           <img src={illustData.url}></img>
         </Link>
 
@@ -176,7 +186,6 @@ export default function IllustCard(illustData: WorkData) {
         <CardContent>
           <Stack direction={'column'} alignItems={'flex-start'}>
             {tags.map((tag: string, index: number) => {
-              //map内の要素にはkeyを付ける
               return (
                 <Stack key={index} direction={'row'} alignItems={'center'}>
                   <Link

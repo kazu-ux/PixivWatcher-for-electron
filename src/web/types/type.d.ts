@@ -86,11 +86,16 @@ export interface CandidatesEntity {
 }
 
 export type WatchWork = {
-  displayName: string;
-  WorkData: WorkData[];
-  url: string;
-  category: 'tag' | 'user';
+  [id: string]: {
+    readonly id: string;
+    displayName: string;
+    workData: WorkData[];
+    url: string;
+    category: 'tag' | 'user';
+  };
 };
+
+export type viewedWorks = { [key: string]: string[] };
 
 type SearchTargetPath = 'artworks' | 'illustrations' | 'manga' | 'novel';
 type SearchTargetParameter =

@@ -1,16 +1,23 @@
 import React, { useEffect } from 'react';
+import './illust_list.css';
 import { Box } from '@mui/material/';
 
 import Grid from '@mui/material/Unstable_Grid2';
 import { useAtom } from 'jotai';
-import { blockTagsAtom, blockUsersAtom, worksAtom } from '../atoms/atom';
+import {
+  blockTagsAtom,
+  blockUsersAtom,
+  viewedWorksAtom,
+  worksAtom,
+} from '../atoms/atom';
 import IllustCard from '../conponents/illust';
-import { DRAWERWIDTH } from '../consts/const';
+import classNames from 'classnames';
 
 export default function IllustList() {
   const [illustData] = useAtom(worksAtom);
   const [blockUsers] = useAtom(blockUsersAtom);
   const [blockTags] = useAtom(blockTagsAtom);
+  const [viewedWorks] = useAtom(viewedWorksAtom);
 
   const hideElements = () => {
     const elements = document.querySelectorAll<HTMLLIElement>('.hidden');
@@ -20,12 +27,16 @@ export default function IllustList() {
   useEffect(() => {
     // hideElements();
     console.log(illustData, blockUsers, blockTags);
+    const viewedElements = document.querySelectorAll('.viewed');
+    viewedElements.forEach((element) => {
+      element.classList.add('hidden');
+    });
   }, [blockUsers, blockTags, illustData]);
 
   return (
     <Box>
       <Grid container spacing={2}>
-        {illustData.map((data, index) => {
+        {illustData.map((data) => {
           const userId = data.userId!;
           const tags = data.tags!;
 
@@ -35,17 +46,30 @@ export default function IllustList() {
             arr1: string[],
             arr2: string[]
           ): boolean => arr1.some((element) => arr2.includes(element));
+
+          const url = document.location.href;
+          const watchWorkId = url.split('/').at(-1) ?? '';
           return (
-            <div key={index}>
+            <div key={data.id}>
               {
                 <Grid
-                  className={
-                    hasDuplicateElements(tags, blockTags) ||
-                    hasDuplicateElements([userId!], blockUsers)
-                      ? 'hidden'
-                      : ''
-                  }
-                  key={index}
+                  className={classNames(
+                    {
+                      block:
+                        hasDuplicateElements(tags, blockTags) ||
+                        hasDuplicateElements([userId!], blockUsers),
+                    },
+                    {
+                      hidden:
+                        hasDuplicateElements(tags, blockTags) ||
+                        hasDuplicateElements([userId!], blockUsers),
+                    },
+                    {
+                      viewed: (viewedWorks[watchWorkId] ?? ['']).includes(
+                        data.id
+                      ),
+                    }
+                  )}
                   maxWidth={'fit-content'}
                 >
                   <IllustCard {...data}></IllustCard>

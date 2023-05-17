@@ -20,15 +20,16 @@ const SaveButton = () => {
 
   const handleButton = async () => {
     const now = new Date().getTime();
-    const watchWork: WatchWork = {
-      displayName: searchWord,
-      WorkData: worksData,
-      url: searchURL,
-      category: 'tag',
+    const newWatchWork: WatchWork = {
+      [now]: {
+        id: now.toString(),
+        displayName: searchWord,
+        workData: worksData,
+        url: searchURL,
+        category: 'tag',
+      },
     };
-    console.log(watchWorks);
-
-    setWatchWorks([...watchWorks, watchWork]);
+    setWatchWorks({ ...watchWorks, ...newWatchWork });
   };
 
   return <Button onClick={handleButton}>新着通知に登録</Button>;

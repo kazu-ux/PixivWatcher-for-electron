@@ -2,11 +2,7 @@ import { atom } from 'jotai';
 import { atomWithStorage } from 'jotai/utils';
 import Store from 'electron-store';
 
-import { SearchQuery, WatchWork, WorkData } from '../types/type';
-
-window.storageAPI.getWatchWorks().then((value) => {
-  console.log(value);
-});
+import { SearchQuery, WatchWork, WorkData, viewedWorks } from '../types/type';
 
 export const countAtom = atom(0);
 export const openAtom = atom(false);
@@ -24,18 +20,19 @@ export const blockUsersAtom = atom<string[]>([
 ]);
 export const blockTagsAtom = atom<string[]>([]);
 export const favoritesAtom = atom<string[]>([]);
+export const viewedWorksAtom = atomWithStorage<viewedWorks>('viewedWorks', {});
+
 export const searchWordAtom = atom<string>('');
 export const searchUrlAtom = atom<string>('');
-export const watchWorksAtom = atomWithStorage<WatchWork[]>('watchWorks', []);
+export const watchWorksAtom = atomWithStorage<WatchWork>('watchWorks', {});
 export const deleteWatchWorkAtom = atom(
   (get) => get(watchWorksAtom),
-  (get, set, watchWorkDelete: WatchWork) => {
-    set(
-      watchWorksAtom,
-      get(watchWorksAtom).filter(
-        (watchWork) => watchWork.url !== watchWorkDelete.url
-      )
-    );
+  (get, set, watchWorkId: string) => {
+    const { [watchWorkId]: _, ...newWatchWorks } = get(watchWorksAtom);
+    set(watchWorksAtom, newWatchWorks);
+
+    const { [watchWorkId]: __, ...newViewedWorks } = get(viewedWorksAtom);
+    set(viewedWorksAtom, newViewedWorks);
   }
 );
 
