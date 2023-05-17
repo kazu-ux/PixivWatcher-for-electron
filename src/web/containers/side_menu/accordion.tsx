@@ -1,6 +1,10 @@
 import { useAtom } from 'jotai';
 import { useState } from 'react';
-import { deleteWatchWorkAtom, worksAtom } from '../../atoms/atom';
+import {
+  deleteWatchWorkAtom,
+  viewedWorksAtom,
+  worksAtom,
+} from '../../atoms/atom';
 import { Link } from 'react-router-dom';
 
 import DeleteIcon from '@mui/icons-material/Delete';
@@ -9,6 +13,7 @@ const MyAccordion = () => {
   const [expanded, setExpanded] = useState(true);
   const [watchWorks, deleteWatchWork] = useAtom(deleteWatchWorkAtom);
   const [, setWorksData] = useAtom(worksAtom);
+  const [viewedWorks] = useAtom(viewedWorksAtom);
 
   const handleExpandClick = () => setExpanded(!expanded);
   return (
@@ -34,9 +39,9 @@ const MyAccordion = () => {
         className='tags_body'
         style={expanded ? { display: '' } : { display: 'none' }}
       >
-        {watchWorks.map((watchWork, index) => (
+        {Object.values(watchWorks).map((watchWork) => (
           <div
-            key={index}
+            key={watchWork.id}
             className='feed_title_container'
             style={{
               display: 'flex',
@@ -45,18 +50,27 @@ const MyAccordion = () => {
             }}
           >
             <Link
-              to={'/feed'}
+              to={`/feed/${watchWork.id}`}
               onClick={() => {
-                setWorksData(watchWork.WorkData);
+                setWorksData(watchWork.workData);
               }}
             >
               <div>{watchWork.displayName}</div>
             </Link>
             <div style={{ display: 'flex' }}>
+              <div className='unread_number_container'>
+                <div>
+                  {
+                    watchWork.workData.filter(
+                      (data) => !viewedWorks[watchWork.id].includes(data.id)
+                    ).length
+                  }
+                </div>
+              </div>
               <div
                 className='delete_icon_button'
                 onClick={() => {
-                  deleteWatchWork(watchWork);
+                  deleteWatchWork(watchWork.id);
                 }}
               >
                 <DeleteIcon />
