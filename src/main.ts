@@ -13,15 +13,16 @@ app.whenReady().then(async () => {
     },
   });
   mainWindow.webContents.session.webRequest.onBeforeSendHeaders(
+    // urlsを扁壷する際はindex.htmlも確認する
     {
-      urls: ['https://i.pximg.net/*'],
-      // types: ['xmlhttprequest'],
+      urls: ['https://i.pximg.net/*', 'https://s.pximg.net/*'],
+      types: ['image'],
     },
     (detail, cb) => {
       let { requestHeaders } = detail;
       requestHeaders = {
         ...requestHeaders,
-        Referer: 'https://www.pixiv.net',
+        Referer: 'https://www.pixiv.net/',
       };
       cb({ requestHeaders });
     }
