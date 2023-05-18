@@ -1,5 +1,5 @@
-import IllustList from '../containers/illust_list';
+import WorkList from '../containers/worksList/work_list';
 
 export default function FeedPage() {
-  return <IllustList />;
+  return <WorkList />;
 }

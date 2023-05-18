@@ -9,8 +9,8 @@ import {
   blockUsersAtom,
   viewedWorksAtom,
   worksAtom,
-} from '../atoms/atom';
-import IllustCard from '../conponents/illust';
+} from '../../atoms/atom';
+import WorkCard from './work_card';
 import classNames from 'classnames';
 
 export default function IllustList() {
@@ -72,7 +72,7 @@ export default function IllustList() {
                   )}
                   maxWidth={'fit-content'}
                 >
-                  <IllustCard {...data}></IllustCard>
+                  <WorkCard {...data}></WorkCard>
                 </Grid>
               }
             </div>

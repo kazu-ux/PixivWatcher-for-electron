@@ -101,7 +101,7 @@ export default function BasicSelect() {
   };
 
   return (
-    <Stack direction={'row'} spacing={2}>
+    <Stack direction={'row'} justifyContent={'center'} spacing={'0.5rem'}>
       <Box sx={{ minWidth: 200 }}>
         <FormControl fullWidth>
           <InputLabel id='demo-simple-select-label'>検索対象</InputLabel>

@@ -19,8 +19,8 @@ import {
   blockUsersAtom,
   favoritesAtom,
   viewedWorksAtom,
-} from '../atoms/atom';
-import { WorkData } from '../types/type';
+} from '../../atoms/atom';
+import { WorkData } from '../../types/type';
 
 interface ExpandMoreProps extends IconButtonProps {
   expand: boolean;
@@ -108,7 +108,6 @@ export default function IllustCard(illustData: WorkData) {
           sx={{ background: 'rgba(0,0,0,0)' }}
           actionIcon={
             <IconButton aria-label='add to favorites' onClick={handleFavorite}>
-              {/* {favorites.includes(illustData.id!)? } */}
               <FavoriteIcon
                 sx={{
                   color: favorites.includes(illustData.id!) ? 'red' : 'white',

@@ -75,7 +75,13 @@ const SearchForm = () => {
     // candidatesAPI(debouncedInputText);
   }, [debouncedInputText]);
   return (
-    <Stack>
+    <div
+      style={{
+        display: 'flex',
+        flexDirection: 'column',
+        justifyContent: 'center',
+      }}
+    >
       <Stack
         direction={'row'}
         margin={'50px'}
@@ -97,8 +103,9 @@ const SearchForm = () => {
         />
         <Button onClick={handleSubmit}>検索!</Button>
       </Stack>
-      <BasicSelect></BasicSelect>
-    </Stack>
+
+      <BasicSelect />
+    </div>
   );
 };
 
