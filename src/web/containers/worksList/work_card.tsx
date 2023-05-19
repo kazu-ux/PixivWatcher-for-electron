@@ -32,6 +32,8 @@ function WorkCard(workData: WorkData) {
     console.log(favorites);
   };
 
+  const handleWorkClick = () => {};
+
   const hasDuplicateElements = (arr1: string[], arr2: string[]): boolean =>
     arr1.some((element) => arr2.includes(element));
 
@@ -43,7 +45,12 @@ function WorkCard(workData: WorkData) {
         border: '1px solid black',
       }}
     >
-      <a href={itemURL} target='_blank' rel='nofollow noreferrer noopener'>
+      <a
+        href={itemURL}
+        target='_blank'
+        rel='nofollow noreferrer noopener'
+        onClick={handleWorkClick}
+      >
         <img src={workData.url} width={'100%'}></img>
       </a>
       <div
@@ -52,6 +59,7 @@ function WorkCard(workData: WorkData) {
           display: 'flex',
           margin: '0.5rem',
         }}
+        onClick={handleWorkClick}
       >
         <a
           className='work_title'
