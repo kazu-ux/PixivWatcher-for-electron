@@ -1,13 +1,26 @@
-import React, { useEffect } from 'react';
+import { useEffect } from 'react';
+import './work_list.css';
 
 import { useAtom } from 'jotai';
-import { worksAtom } from '../../atoms/atom';
+import { viewedWorksAtom, worksAtom } from '../../atoms/atom';
 import WorkCard from './work_card';
+import classNames from 'classnames';
 
 export default function WorkList() {
   const [workData] = useAtom(worksAtom);
+  const [viewedWorks] = useAtom(viewedWorksAtom);
 
   const style = { margin: '0.5rem' };
+
+  useEffect(() => {
+    const viewedElements = document.querySelectorAll('.viewed');
+    viewedElements.forEach((element) => {
+      element.classList.add('hidden');
+    });
+  }, [workData]);
+
+  const url = document.location.href;
+  const watchWorkId = url.split('/').at(-1) ?? '';
 
   return (
     <div
@@ -20,7 +33,25 @@ export default function WorkList() {
       }}
     >
       {workData.map((data, index) => (
-        <div key={index} style={style}>
+        <div
+          key={index}
+          style={style}
+          className={classNames(
+            /*      {
+              block:
+                hasDuplicateElements(tags, blockTags) ||
+                hasDuplicateElements([userId!], blockUsers),
+            },
+            {
+              hidden:
+                hasDuplicateElements(tags, blockTags) ||
+                hasDuplicateElements([userId!], blockUsers),
+            }, */
+            {
+              viewed: (viewedWorks[watchWorkId] ?? ['']).includes(data.id),
+            }
+          )}
+        >
           <WorkCard {...data}></WorkCard>
         </div>
       ))}
