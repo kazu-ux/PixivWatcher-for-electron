@@ -63,7 +63,6 @@ const SearchForm = () => {
       searchMethod: searchQuery.searchMethod,
       targetAge: searchQuery.targetAge,
     });
-    console.log(url);
     setSearhURL(url);
 
     const worksData = await window.pixivAPI.requestWorks(url);
