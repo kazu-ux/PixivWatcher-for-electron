@@ -62,7 +62,8 @@ app.whenReady().then(async () => {
         response.on('end', () => {
           const rawJson: NestedObject = JSON.parse(bufferStr);
           const works = getPropertiesWithKey(rawJson, 'data');
-          resolve(works);
+          const noAdWokrs = works.filter((work) => work.id);
+          resolve(noAdWokrs);
         });
         response.on('data', (chunk) => {
           bufferStr += chunk.toString();

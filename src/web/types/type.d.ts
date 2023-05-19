@@ -37,6 +37,7 @@ export type WorkData = {
   marker: unknown;
   seriesId?: string;
   seriesTitle?: string;
+  isAdContainer?: boolean;
 };
 
 export interface Candidates {
