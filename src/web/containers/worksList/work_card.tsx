@@ -1,8 +1,14 @@
-import React, { memo, useState } from 'react';
+import React, { memo } from 'react';
 
 import { useAtom } from 'jotai';
-import { blockTagsAtom, blockUsersAtom, favoritesAtom } from '../../atoms/atom';
+import {
+  blockTagsAtom,
+  blockUsersAtom,
+  favoritesAtom,
+  viewedWorksAtom,
+} from '../../atoms/atom';
 import { WorkData } from '../../types/type';
+import { produce } from 'immer';
 
 function WorkCard(workData: WorkData) {
   const [expanded, setExpanded] = React.useState(false);
@@ -10,6 +16,8 @@ function WorkCard(workData: WorkData) {
   const [blockUsers, setBlockUsers] = useAtom(blockUsersAtom);
   const [blockTags, setBlockTags] = useAtom(blockTagsAtom);
   const [favorites, setFavorites] = useAtom(favoritesAtom);
+
+  const [viewedWorks, setViewedWorks] = useAtom(viewedWorksAtom);
 
   const itemURL = `https://www.pixiv.net/artworks/${workData.id}`;
   const UserURL = `https://www.pixiv.net/users/${workData.userId}`;
@@ -32,7 +40,19 @@ function WorkCard(workData: WorkData) {
     console.log(favorites);
   };
 
-  const handleWorkClick = () => {};
+  const handleWorkClick = () => {
+    const url = document.location.href;
+    if (!url.includes('/feed')) return;
+
+    const watchWorkId = url.split('/').at(-1);
+    if (!watchWorkId) return;
+
+    const newViewedWorks = produce(viewedWorks, (draft) => {
+      draft[watchWorkId] = [...draft[watchWorkId], workData.id];
+    });
+
+    setViewedWorks(newViewedWorks);
+  };
 
   const hasDuplicateElements = (arr1: string[], arr2: string[]): boolean =>
     arr1.some((element) => arr2.includes(element));
