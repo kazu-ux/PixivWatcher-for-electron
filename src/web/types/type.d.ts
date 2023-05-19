@@ -39,43 +39,6 @@ export type WorkData = {
   seriesTitle?: string;
 };
 
-type SearchTop = {
-  body: {
-    illustManga?: { data: WorkData[] };
-    novel?: { data: WorkData[] };
-    popular?: { recent: WorkData[]; permanent: WorkData[] };
-  };
-};
-
-type Illustrations = {
-  body: {
-    illust?: { data: WorkData[] };
-    popular?: { recent: WorkData[]; permanent: WorkData[] };
-    thumbnails?: { illust: WorkData[]; novel: WorkData[] };
-  };
-};
-
-type Manga = {
-  body: {
-    manga?: { data: WorkData[] };
-    popular?: { recent: WorkData[]; permanent: WorkData[] };
-    thumbnails?: { illust: WorkData[]; novel: WorkData[] };
-  };
-};
-
-type Novels = {
-  body: {
-    novel?: { data: WorkData[] };
-    thumbnails?: {
-      illust: WorkData[];
-      novel: WorkData[];
-      novelSeries: WorkData[];
-    };
-  };
-};
-
-type Artworks = SearchTop;
-
 export interface Candidates {
   candidates?: CandidatesEntity[] | null;
 }
