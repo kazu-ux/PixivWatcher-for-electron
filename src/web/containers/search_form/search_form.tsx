@@ -30,7 +30,6 @@ const SearchForm = () => {
   const endComposition = () => setComposition(false);
 
   const [searchQuery] = useAtom(searchQueryAtom);
-  const [, setSearchURL] = useAtom(searchUrlAtom);
 
   const candidatesAPI = async (keyword: string) => {
     if (!keyword) return;
@@ -64,7 +63,7 @@ const SearchForm = () => {
       targetAge: searchQuery.targetAge,
     });
     console.log(url);
-    setSearchURL(url);
+
     const worksData = await window.pixivAPI.requestWorks(url);
     if (!worksData) return;
     setWorksData(worksData);
