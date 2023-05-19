@@ -18,9 +18,7 @@ import SettingsIcon from '@mui/icons-material/Settings';
 import SearchIcon from '@mui/icons-material/Search';
 import { Link } from 'react-router-dom';
 import { DRAWERWIDTH } from '../consts/const';
-import { useAtom } from 'jotai';
-import { watchWorksAtom, worksAtom } from '../atoms/atom';
-import { WorkData } from '../types/type';
+
 import { Button } from '@mui/material';
 import MyAccordion from './side_menu/accordion';
 
@@ -31,9 +29,6 @@ interface MainList {
 }
 
 export default function PermanentDrawerLeft(props: { body: JSX.Element }) {
-  const [watchWorks] = useAtom(watchWorksAtom);
-  const [, setWorksData] = useAtom(worksAtom);
-
   const list: MainList[] = [
     { displayName: 'ホーム', icon: <HomeIcon />, url: '/' },
     { displayName: '検索', icon: <SearchIcon />, url: '/search' },
@@ -48,8 +43,6 @@ export default function PermanentDrawerLeft(props: { body: JSX.Element }) {
       url: '/settings',
     },
   ];
-
-  const handleClick = (worksData: WorkData[]) => setWorksData(worksData);
 
   return (
     <Box sx={{ display: 'flex' }}>
@@ -82,14 +75,10 @@ export default function PermanentDrawerLeft(props: { body: JSX.Element }) {
         <Toolbar />
         <Divider />
         <List>
-          {list.map((object, index) => (
+          {list.map((object) => (
             <ListItem key={object.displayName} disablePadding>
               <Link to={object.url}>
-                <ListItemButton
-                  onClick={() => {
-                    console.log('clicked');
-                  }}
-                >
+                <ListItemButton>
                   <ListItemIcon>{object.icon}</ListItemIcon>
                   <ListItemText primary={object.displayName} />
                 </ListItemButton>
