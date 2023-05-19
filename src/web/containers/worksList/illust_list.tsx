@@ -1,5 +1,5 @@
-import React, { useEffect } from 'react';
-import './illust_list.css';
+import { useEffect } from 'react';
+
 import { Box } from '@mui/material/';
 
 import Grid from '@mui/material/Unstable_Grid2';
