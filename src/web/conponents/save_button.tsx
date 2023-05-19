@@ -5,8 +5,10 @@ import {
   searchWordAtom,
   watchWorksAtom,
   searchUrlAtom,
+  viewedWorksAtom,
 } from '../atoms/atom';
 import { WatchWorks } from '../types/type';
+import { produce } from 'immer';
 
 const SaveButton = () => {
   const [searchWord] = useAtom(searchWordAtom);
@@ -14,11 +16,13 @@ const SaveButton = () => {
   const [watchWorks, setWatchWorks] = useAtom(watchWorksAtom);
   const [searchURL] = useAtom(searchUrlAtom);
 
+  const [viewedWorks, setViewedWorks] = useAtom(viewedWorksAtom);
+
   const handleButton = async () => {
-    const now = new Date().getTime();
+    const now = new Date().getTime().toString();
     const newWatchWork: WatchWorks = {
       [now]: {
-        id: now.toString(),
+        id: now,
         displayName: searchWord,
         workData: worksData,
         url: searchURL,
@@ -26,6 +30,11 @@ const SaveButton = () => {
       },
     };
     setWatchWorks({ ...watchWorks, ...newWatchWork });
+
+    const newViewedWorks = produce(viewedWorks, (draft) => {
+      draft[now] = [];
+    });
+    setViewedWorks(newViewedWorks);
   };
 
   return <Button onClick={handleButton}>新着通知に登録</Button>;
