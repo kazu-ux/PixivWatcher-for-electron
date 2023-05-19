@@ -25,6 +25,7 @@ const MyAccordion = () => {
   const handleUpdateButton = async (watchWork: WatchWork) => {
     const worksData = await window.pixivAPI.requestWorks(watchWork.url);
     if (!worksData) return;
+
     const newWorksData = [...watchWork.workData, ...worksData]
       .filter(
         (element, index, self) =>
