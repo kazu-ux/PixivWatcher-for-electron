@@ -55,9 +55,7 @@ export default function PermanentDrawerLeft(props: { body: JSX.Element }) {
           <Typography variant='h6' noWrap component='div'>
             Pixiv Watcher
           </Typography>
-          <Button color='inherit' onClick={async () => {}}>
-            Login
-          </Button>
+          <Button color='inherit'>Login</Button>
         </Toolbar>
       </AppBar>
       <Drawer

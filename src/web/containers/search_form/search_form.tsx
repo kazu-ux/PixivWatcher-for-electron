@@ -1,13 +1,6 @@
-import { Autocomplete, Box, Button, Stack, TextField } from '@mui/material';
-import {
-  ChangeEvent,
-  FormEvent,
-  FormEventHandler,
-  useEffect,
-  useState,
-} from 'react';
-import { useDebounce } from '../../customHooks/customHooks';
-import { PixivAPI } from '../../api/api';
+import { Button, Stack, TextField } from '@mui/material';
+import { ChangeEvent, useEffect, useState } from 'react';
+import { useDebounce } from '../../customHooks/useDebounce';
 import { useAtom } from 'jotai';
 import {
   worksAtom,
@@ -15,13 +8,13 @@ import {
   searchQueryAtom,
   searchUrlAtom,
 } from '../../atoms/atom';
-import { Candidates, CandidatesEntity } from '../../types/type';
+// import { Candidates, CandidatesEntity } from '../../types/type';
 import BasicSelect from './search_option';
 import createSearchURL from '../../utils/create_search_url';
 
 const SearchForm = () => {
   const [inputText, setInputText] = useAtom(searchWordAtom);
-  const [candidates, setCandidates] = useState<CandidatesEntity[]>([]);
+  // const [candidates, setCandidates] = useState<CandidatesEntity[]>([]);
   const [, setWorksData] = useAtom(worksAtom);
   const debouncedInputText = useDebounce(inputText, 1000);
 
@@ -32,7 +25,7 @@ const SearchForm = () => {
   const [searchQuery] = useAtom(searchQueryAtom);
   const [, setSearhURL] = useAtom(searchUrlAtom);
 
-  const candidatesAPI = async (keyword: string) => {
+  /* const candidatesAPI = async (keyword: string) => {
     if (!keyword) return;
     const response = await fetch(
       `https://www.pixiv.net/rpc/cps.php?keyword=${keyword}&lang=ja`
@@ -48,7 +41,7 @@ const SearchForm = () => {
     } else {
       console.log(response.status);
     }
-  };
+  }; */
 
   const handleChange = async (
     event: ChangeEvent<HTMLTextAreaElement | HTMLInputElement>

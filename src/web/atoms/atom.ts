@@ -1,6 +1,5 @@
 import { atom } from 'jotai';
 import { atomWithStorage } from 'jotai/utils';
-import Store from 'electron-store';
 
 import {
   SearchQuery,

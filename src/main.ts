@@ -38,7 +38,7 @@ app.whenReady().then(async () => {
     function getPropertiesWithKey(obj: NestedObject, key: string): WorkData[] {
       let result: any[] = [];
 
-      for (let prop in obj) {
+      for (const prop in obj) {
         if (prop === key) {
           result.push(obj[prop]);
         } else if (typeof obj[prop] === 'object') {
