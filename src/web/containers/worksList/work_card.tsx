@@ -1,21 +1,23 @@
-import React, { memo } from 'react';
+import React, { memo, useEffect, useRef, useState } from 'react';
 
 import { useAtom } from 'jotai';
 import {
-  blockTagsAtom,
-  blockUsersAtom,
-  favoritesAtom,
+  // blockTagsAtom,
+  // blockUsersAtom,
+  // favoritesAtom,
   viewedWorksAtom,
 } from '../../atoms/atom';
 import { WorkData } from '../../types/type';
 import { produce } from 'immer';
+import { useOnScreen } from '../../customHooks/useOnScreen';
 
-function WorkCard(workData: WorkData) {
+function WorkCard(props: { workData: WorkData }) {
+  const { workData } = props;
   const [expanded, setExpanded] = React.useState(false);
 
-  const [blockUsers, setBlockUsers] = useAtom(blockUsersAtom);
-  const [blockTags, setBlockTags] = useAtom(blockTagsAtom);
-  const [favorites, setFavorites] = useAtom(favoritesAtom);
+  // const [blockUsers, setBlockUsers] = useAtom(blockUsersAtom);
+  // const [blockTags, setBlockTags] = useAtom(blockTagsAtom);
+  // const [favorites, setFavorites] = useAtom(favoritesAtom);
 
   const [viewedWorks, setViewedWorks] = useAtom(viewedWorksAtom);
 
@@ -23,11 +25,13 @@ function WorkCard(workData: WorkData) {
   const UserURL = `https://www.pixiv.net/users/${workData.userId}`;
   const baseTagsURL = 'https://www.pixiv.net/tags/';
 
+  const ref = React.useRef<HTMLDivElement>(null);
+
   const handleExpandClick = () => {
     setExpanded(!expanded);
   };
 
-  const handleFavorite = () => {
+  /*   const handleFavorite = () => {
     const clickedIllustId = workData.id!;
     // favoritesにclickedIllustIdが含まれているかどうかを判定する
     const isFavorite = favorites.includes(clickedIllustId);
@@ -38,7 +42,7 @@ function WorkCard(workData: WorkData) {
     // newFavoritesをセットする
     setFavorites(newFavorites);
     console.log(favorites);
-  };
+  }; */
 
   const handleWorkClick = () => {
     const url = document.location.href;
@@ -47,6 +51,8 @@ function WorkCard(workData: WorkData) {
     const watchWorkId = url.split('/').at(-1);
     if (!watchWorkId) return;
 
+    // ref.current?.classList.add('viewed');
+
     const newViewedWorks = produce(viewedWorks, (draft) => {
       draft[watchWorkId] = [...draft[watchWorkId], workData.id];
     });
@@ -54,12 +60,28 @@ function WorkCard(workData: WorkData) {
     setViewedWorks(newViewedWorks);
   };
 
-  const hasDuplicateElements = (arr1: string[], arr2: string[]): boolean =>
-    arr1.some((element) => arr2.includes(element));
+  /*   const hasDuplicateElements = (arr1: string[], arr2: string[]): boolean =>
+    arr1.some((element) => arr2.includes(element)); */
+  const target = useOnScreen(ref);
+
+  useEffect(() => {
+    if (!ref.current) return;
+    if (target === 'ABOVE_VIEWPORT') {
+      const url = document.location.href;
+      if (!url.includes('/feed')) return;
+
+      const watchWorkId = url.split('/').at(-1);
+      if (!watchWorkId) return;
+
+      ref.current?.parentElement?.classList.add('viewed');
+    }
+  }, [target]);
 
   return (
     <div
       className='pf_card'
+      id={workData.id}
+      ref={ref}
       style={{
         width: '184px',
         border: '1px solid black',
@@ -129,7 +151,6 @@ function WorkCard(workData: WorkData) {
         </a>
         <div
           className='block_user_button'
-          onClick={() => {}}
           style={{
             marginLeft: '0.5rem',
             paddingBottom: '1px',
@@ -175,7 +196,6 @@ function WorkCard(workData: WorkData) {
                 </a>
                 <div
                   className='block_tag_button'
-                  onClick={() => {}}
                   style={{
                     marginLeft: '0.5rem',
                     userSelect: 'none',
