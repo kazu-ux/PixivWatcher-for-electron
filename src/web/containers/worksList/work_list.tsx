@@ -14,6 +14,9 @@ export default function WorkList() {
   const [viewedWorksCount, setViewedWorksCount] = useState(0);
   const [viewedWorkIds, setViewedWorkIds] = useState<string[]>([]);
 
+  const currentURL = document.location.href;
+  const watchWorkId = currentURL.split('/').at(-1) ?? '';
+
   useInterval(() => {
     const newViewedWorks = Array.from(document.querySelectorAll('.viewed')).map(
       (element) => element.id
@@ -24,13 +27,9 @@ export default function WorkList() {
   }, 1000);
 
   useEffect(() => {
-    const url = document.location.href;
-    if (!url.includes('/feed')) return;
+    if (!currentURL.includes('/feed')) return;
 
-    const watchWorkId = url.split('/').at(-1);
-    if (!watchWorkId) return;
-
-    if (!viewedWorkIds.length) return;
+    if (!watchWorkId || !viewedWorkIds.length) return;
 
     const newViewedWorks = produce(viewedWorks, (draft) => {
       const uniqueWatchWorkIds = Array.from(
@@ -41,15 +40,12 @@ export default function WorkList() {
     setViewedWorks(newViewedWorks);
   }, [viewedWorksCount]);
 
+  useEffect(() => {
+    window.scroll({ top: 0, behavior: 'auto' });
+    console.log(viewedWorks[watchWorkId]);
+  }, [currentURL]);
+
   const style = { margin: '0.5rem' };
-
-  const url = document.location.href;
-  const watchWorkId = url.split('/').at(-1) ?? '';
-
-  const intersectCallback = useCallback((str: string) => {
-    // setTestArray((pre) => [...pre, str]);
-    // console.log(testArray);
-  }, []);
 
   return (
     <div
