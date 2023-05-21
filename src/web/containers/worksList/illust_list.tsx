@@ -71,9 +71,7 @@ export default function IllustList() {
                     }
                   )}
                   maxWidth={'fit-content'}
-                >
-                  <WorkCard {...data}></WorkCard>
-                </Grid>
+                ></Grid>
               }
             </div>
           );
