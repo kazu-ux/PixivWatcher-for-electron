@@ -1,4 +1,4 @@
-import React, { memo, useEffect, useRef, useState } from 'react';
+import { memo, useEffect, useRef, useState } from 'react';
 
 import { useAtom } from 'jotai';
 import {
@@ -13,7 +13,7 @@ import { useOnScreen } from '../../customHooks/useOnScreen';
 
 function WorkCard(props: { workData: WorkData }) {
   const { workData } = props;
-  const [expanded, setExpanded] = React.useState(false);
+  const [expanded, setExpanded] = useState(false);
 
   // const [blockUsers, setBlockUsers] = useAtom(blockUsersAtom);
   // const [blockTags, setBlockTags] = useAtom(blockTagsAtom);
@@ -25,7 +25,7 @@ function WorkCard(props: { workData: WorkData }) {
   const UserURL = `https://www.pixiv.net/users/${workData.userId}`;
   const baseTagsURL = 'https://www.pixiv.net/tags/';
 
-  const ref = React.useRef<HTMLDivElement>(null);
+  const ref = useRef<HTMLDivElement>(null);
 
   const handleExpandClick = () => {
     setExpanded(!expanded);
@@ -76,6 +76,11 @@ function WorkCard(props: { workData: WorkData }) {
       ref.current?.parentElement?.classList.add('viewed');
     }
   }, [target]);
+
+  useEffect(() => {
+    if (!ref.current?.parentElement?.classList.contains('viewed')) return;
+    ref.current?.parentElement?.classList.add('hidden');
+  }, [workData]);
 
   return (
     <div
