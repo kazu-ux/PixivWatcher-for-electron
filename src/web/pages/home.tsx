@@ -21,7 +21,7 @@ export default function Home() {
     >
       <SearchForm></SearchForm>
       <SaveButton></SaveButton>
-      <WorkList></WorkList>
+      {worksData.length ? <WorkList></WorkList> : <></>}
     </div>
   );
 }
