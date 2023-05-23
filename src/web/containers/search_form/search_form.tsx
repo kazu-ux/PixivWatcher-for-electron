@@ -1,6 +1,6 @@
 import { Button, Stack, TextField } from '@mui/material';
 import { ChangeEvent, useEffect, useState } from 'react';
-import { useDebounce } from '../../customHooks/useDebounce';
+
 import { useAtom } from 'jotai';
 import {
   worksAtom,
@@ -11,6 +11,7 @@ import {
 // import { Candidates, CandidatesEntity } from '../../types/type';
 import BasicSelect from './search_option';
 import createSearchURL from '../../utils/create_search_url';
+import { useDebounce } from 'use-debounce';
 
 const SearchForm = () => {
   const [inputText, setInputText] = useAtom(searchWordAtom);
@@ -64,7 +65,7 @@ const SearchForm = () => {
   };
 
   useEffect(() => {
-    console.log(debouncedInputText);
+    // console.log(debouncedInputText);
     // candidatesAPI(debouncedInputText);
   }, [debouncedInputText]);
   return (
