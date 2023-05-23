@@ -42,7 +42,7 @@ export default function WorkList() {
 
   useEffect(() => {
     window.scrollTo(0, 0);
-  }, [currentURL]);
+  }, [workData]);
 
   const callback = useCallback(
     (element: HTMLDivElement | null, data: WorkData) => {
