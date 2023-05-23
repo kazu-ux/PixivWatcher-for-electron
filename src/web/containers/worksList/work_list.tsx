@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import './work_list.css';
 
 import { useAtom } from 'jotai';
@@ -7,6 +7,7 @@ import WorkCard from './work_card';
 import classNames from 'classnames';
 import useInterval from '../../customHooks/useInterval';
 import { produce } from 'immer';
+import { WorkData } from '../../types/type';
 
 export default function WorkList() {
   const [workData] = useAtom(worksAtom);
@@ -39,7 +40,15 @@ export default function WorkList() {
     setViewedWorks(newViewedWorks);
   }, [viewedWorksCount]);
 
-  const style = { margin: '0.5rem' };
+  const callback = useCallback(
+    (element: HTMLDivElement | null, data: WorkData) => {
+      window.scrollTo(0, 0);
+      if ((viewedWorks[watchWorkId] ?? ['']).includes(data.id)) {
+        element?.classList.add('hidden');
+      }
+    },
+    [currentURL]
+  );
 
   return (
     <div
@@ -53,12 +62,14 @@ export default function WorkList() {
     >
       {workData.map((data, index) => (
         <div
-          key={index}
+          ref={(element) => {
+            callback(element, data);
+          }}
+          key={data.id}
           id={data.id}
-          style={style}
           className={
             classNames({
-              viewed: (viewedWorks[watchWorkId] ?? ['']).includes(data.id),
+              // hidden: (viewedWorks[watchWorkId] ?? ['']).includes(data.id),
             })
             /*      {
               block:

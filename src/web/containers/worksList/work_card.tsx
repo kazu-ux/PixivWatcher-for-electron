@@ -51,7 +51,7 @@ function WorkCard(props: { workData: WorkData }) {
     const watchWorkId = url.split('/').at(-1);
     if (!watchWorkId) return;
 
-    // ref.current?.classList.add('viewed');
+    ref.current?.parentElement?.classList.add('viewed');
 
     const newViewedWorks = produce(viewedWorks, (draft) => {
       draft[watchWorkId] = [...draft[watchWorkId], workData.id];
@@ -77,15 +77,9 @@ function WorkCard(props: { workData: WorkData }) {
     }
   }, [target]);
 
-  useEffect(() => {
-    if (!ref.current?.parentElement?.classList.contains('viewed')) return;
-    ref.current?.parentElement?.classList.add('hidden');
-  }, [workData]);
-
   return (
     <div
       className='pf_card'
-      id={workData.id}
       ref={ref}
       style={{
         width: '184px',
