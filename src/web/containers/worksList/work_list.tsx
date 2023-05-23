@@ -40,9 +40,12 @@ export default function WorkList() {
     setViewedWorks(newViewedWorks);
   }, [viewedWorksCount]);
 
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, [currentURL]);
+
   const callback = useCallback(
     (element: HTMLDivElement | null, data: WorkData) => {
-      window.scrollTo(0, 0);
       if ((viewedWorks[watchWorkId] ?? ['']).includes(data.id)) {
         element?.classList.add('hidden');
       }
