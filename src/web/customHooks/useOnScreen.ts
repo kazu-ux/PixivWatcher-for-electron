@@ -12,15 +12,8 @@ export function useOnScreen(targetRef: React.RefObject<HTMLElement>) {
 
   const observer = new IntersectionObserver(
     ([entry]) => {
-      if (entry.isIntersecting) {
-        setTargetViewPosition('VISIBLE'); // 画面内に表示中
-        return;
-      }
-      if (entry.boundingClientRect.top > 0) {
-        setTargetViewPosition('BELOW_VIEWPORT'); // 画面より下に表示中
-      } else {
-        setTargetViewPosition('ABOVE_VIEWPORT'); // 画面より上に表示中
-      }
+      if (entry.boundingClientRect.top > 0) return;
+      setTargetViewPosition('ABOVE_VIEWPORT'); // 画面より上に表示中
     },
     {
       root: null,
