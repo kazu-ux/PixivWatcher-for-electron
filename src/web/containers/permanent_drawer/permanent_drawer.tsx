@@ -16,11 +16,15 @@ import HomeIcon from '@mui/icons-material/Home';
 import InfoIcon from '@mui/icons-material/Info';
 import SettingsIcon from '@mui/icons-material/Settings';
 import SearchIcon from '@mui/icons-material/Search';
-import { Link } from 'react-router-dom';
-import { DRAWERWIDTH } from '../consts/const';
+import { Link, NavLink, Outlet } from 'react-router-dom';
+import { DRAWERWIDTH } from '../../consts/const';
 
 import { Button } from '@mui/material';
-import MyAccordion from './side_menu/accordion';
+import MyAccordion from '../side_menu/accordion';
+import { useAtom } from 'jotai';
+import { titleAtom } from '../../atoms/atom';
+
+import './permanent_drawer.css';
 
 interface MainList {
   displayName: string;
@@ -28,7 +32,9 @@ interface MainList {
   url: string;
 }
 
-export default function PermanentDrawerLeft(props: { body: JSX.Element }) {
+export default function PermanentDrawerLeft() {
+  const [title] = useAtom(titleAtom);
+
   const list: MainList[] = [
     { displayName: 'ホーム', icon: <HomeIcon />, url: '/' },
     { displayName: '検索', icon: <SearchIcon />, url: '/search' },
@@ -53,7 +59,7 @@ export default function PermanentDrawerLeft(props: { body: JSX.Element }) {
       >
         <Toolbar>
           <Typography variant='h6' noWrap component='div'>
-            Pixiv Watcher
+            {title}
           </Typography>
           <Button color='inherit'>Login</Button>
         </Toolbar>
@@ -72,27 +78,36 @@ export default function PermanentDrawerLeft(props: { body: JSX.Element }) {
       >
         <Toolbar />
         <Divider />
-        <List>
-          {list.map((object) => (
-            <ListItem key={object.displayName} disablePadding>
-              <Link to={object.url}>
-                <ListItemButton>
-                  <ListItemIcon>{object.icon}</ListItemIcon>
-                  <ListItemText primary={object.displayName} />
-                </ListItemButton>
-              </Link>
-            </ListItem>
-          ))}
-        </List>
-        <Divider />
-        <MyAccordion></MyAccordion>
+        <nav>
+          <List>
+            {list.map((object) => (
+              <ListItem key={object.displayName} disablePadding>
+                <NavLink
+                  to={object.url}
+                  className={({ isActive, isPending }) =>
+                    isActive ? 'active' : isPending ? 'pending' : ''
+                  }
+                >
+                  <ListItemButton>
+                    <ListItemIcon>{object.icon}</ListItemIcon>
+                    <ListItemText primary={object.displayName} />
+                  </ListItemButton>
+                </NavLink>
+              </ListItem>
+            ))}
+          </List>
+          <Divider />
+          <MyAccordion></MyAccordion>
+        </nav>
       </Drawer>
       <Box
         component='main'
         sx={{ flexGrow: 1, bgcolor: 'background.default', p: 3 }}
       >
         <Toolbar />
-        {props.body}
+        <main>
+          <Outlet />
+        </main>
       </Box>
     </Box>
   );
