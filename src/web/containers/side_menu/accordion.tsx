@@ -45,100 +45,118 @@ const MyAccordion = () => {
   };
   return (
     <div className='category_container'>
-      <div className='category_title' style={{ display: 'flex' }}>
-        <div>タグ</div>
+      <div className='tag_category_container'>
         <div
-          className='toggle_button'
-          onClick={handleExpandClick}
+          className='category_title'
           style={{
-            height: '2.5rem',
-            userSelect: 'none',
-            cursor: 'pointer',
-            textAlign: 'center',
+            display: 'flex',
+            justifyContent: 'center',
           }}
         >
-          <div>{expanded ? '▲' : '▼'}</div>
-        </div>
-        <div className='feed_add_button'>+</div>
-      </div>
-
-      <div
-        className='tags_body'
-        style={expanded ? { display: '' } : { display: 'none' }}
-      >
-        {Object.values(watchWorks).map((watchWork) => (
+          <div>タグ</div>
           <div
-            key={watchWork.id}
-            className='feed_title_container'
+            className='toggle_button'
+            onClick={handleExpandClick}
             style={{
-              display: 'flex',
-              justifyContent: 'space-between',
-              margin: '0.5rem',
+              height: '2.5rem',
+              userSelect: 'none',
+              cursor: 'pointer',
+              textAlign: 'center',
             }}
           >
-            <NavLink
-              to={`/feed/${watchWork.id}`}
-              className={({ isActive, isPending }) =>
-                isActive
-                  ? 'feed_title active'
-                  : isPending
-                  ? 'pending'
-                  : 'feed_title'
-              }
-              onClick={(event) => {
-                console.log(event.target);
-                setWorksData(watchWork.workData);
+            <div>{expanded ? '▲' : '▼'}</div>
+          </div>
+          <div className='feed_add_button'>+</div>
+        </div>
+        <div
+          className='tags_body'
+          style={expanded ? { display: '' } : { display: 'none' }}
+        >
+          {Object.values(watchWorks).map((watchWork) => (
+            <div
+              key={watchWork.id}
+              className='feed_title_container'
+              style={{
+                display: 'flex',
+                justifyContent: 'space-between',
+                margin: '0.5rem',
               }}
             >
-              <div>{watchWork.displayName}</div>
-            </NavLink>
-
-            <div style={{ display: 'flex', alignItems: 'flex-end' }}>
-              <div
-                className='unread_update_container'
-                onMouseEnter={() => setHover({ [watchWork.id]: true })}
-                onMouseLeave={() => setHover({ [watchWork.id]: false })}
-              >
-                <div>
-                  {hover[watchWork.id] ? (
-                    <div
-                      className='update_button'
-                      onClick={() => {
-                        handleUpdateButton(watchWork);
-                      }}
-                    >
-                      <RefreshIcon />
-                    </div>
-                  ) : (
-                    <div
-                      className='unread_number'
-                      style={{
-                        paddingBottom: '6px',
-                      }}
-                    >
-                      {
-                        watchWork.workData.filter(
-                          (data) =>
-                            !(viewedWorks[watchWork.id] ?? ['']).includes(
-                              data.id
-                            )
-                        ).length
-                      }
-                    </div>
-                  )}
-                </div>
-              </div>
-              <div
-                className='delete_icon_button'
-                onClick={() => {
-                  deleteWatchWork(watchWork.id);
+              <NavLink
+                to={`/feed/${watchWork.id}`}
+                className={({ isActive, isPending }) =>
+                  isActive
+                    ? 'feed_title active'
+                    : isPending
+                    ? 'pending'
+                    : 'feed_title'
+                }
+                onClick={(event) => {
+                  console.log(event.target);
+                  setWorksData(watchWork.workData);
                 }}
               >
-                <DeleteIcon />
+                <div>{watchWork.displayName}</div>
+              </NavLink>
+
+              <div style={{ display: 'flex', alignItems: 'flex-end' }}>
+                <div
+                  className='unread_update_container'
+                  onMouseEnter={() => setHover({ [watchWork.id]: true })}
+                  onMouseLeave={() => setHover({ [watchWork.id]: false })}
+                >
+                  <div>
+                    {hover[watchWork.id] ? (
+                      <div
+                        className='update_button'
+                        onClick={() => {
+                          handleUpdateButton(watchWork);
+                        }}
+                      >
+                        <RefreshIcon />
+                      </div>
+                    ) : (
+                      <div
+                        className='unread_number'
+                        style={{
+                          paddingBottom: '6px',
+                        }}
+                      >
+                        {
+                          watchWork.workData.filter(
+                            (data) =>
+                              !(viewedWorks[watchWork.id] ?? ['']).includes(
+                                data.id
+                              )
+                          ).length
+                        }
+                      </div>
+                    )}
+                  </div>
+                </div>
+                <div
+                  className='delete_icon_button'
+                  onClick={() => {
+                    deleteWatchWork(watchWork.id);
+                  }}
+                >
+                  <DeleteIcon />
+                </div>
               </div>
             </div>
-          </div>
-        ))}
+          ))}
+        </div>
+      </div>
+      <div className='user_category_container'>
+        <div
+          className='category_title'
+          style={{
+            display: 'flex',
+            justifyContent: 'center',
+          }}
+        >
+          <div>ユーザー</div>
+        </div>
       </div>
     </div>
   );
