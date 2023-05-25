@@ -11,17 +11,18 @@ import './accordion.css';
 
 import DeleteIcon from '@mui/icons-material/Delete';
 import RefreshIcon from '@mui/icons-material/Refresh';
-import { WatchWork, WorkData } from '../../types/type';
+import { WatchWork } from '../../types/type';
 
 const MyAccordion = () => {
-  const [expanded, setExpanded] = useState(true);
+  const [expanded, setExpanded] = useState({ tag: true, user: true });
   const [watchWorks, deleteWatchWork] = useAtom(deleteWatchWorkAtom);
   const [, setWorksData] = useAtom(worksAtom);
   const [viewedWorks] = useAtom(viewedWorksAtom);
   const [, updateWatchWork] = useAtom(updateWatchWorkAtom);
   const [hover, setHover] = useState<{ [key: string]: boolean }>({});
 
-  const handleExpandClick = () => setExpanded(!expanded);
+  const handleExpandClick = (target: 'tag' | 'user') =>
+    setExpanded({ ...expanded, [target]: !expanded[target] });
 
   const handleUpdateButton = async (watchWork: WatchWork) => {
     const worksData = await window.pixivAPI.requestWorks(watchWork.url);
@@ -43,6 +44,7 @@ const MyAccordion = () => {
     if (watchWorkId !== watchWork.id) return;
     setWorksData(newWorksData);
   };
+
   return (
     <div className='category_container'>
       <div className='tag_category_container'>
@@ -56,7 +58,7 @@ const MyAccordion = () => {
           <div>タグ</div>
           <div
             className='toggle_button'
-            onClick={handleExpandClick}
+            onClick={() => handleExpandClick('tag')}
             style={{
               height: '2.5rem',
               userSelect: 'none',
@@ -64,13 +66,13 @@ const MyAccordion = () => {
               textAlign: 'center',
             }}
           >
-            <div>{expanded ? '▲' : '▼'}</div>
+            <div>{expanded['tag'] ? '▲' : '▼'}</div>
           </div>
           <div className='feed_add_button'>+</div>
         </div>
         <div
           className='tags_body'
-          style={expanded ? { display: '' } : { display: 'none' }}
+          style={expanded['tag'] ? { display: '' } : { display: 'none' }}
         >
           {Object.values(watchWorks).map((watchWork) => (
             <div
@@ -156,6 +158,19 @@ const MyAccordion = () => {
           }}
         >
           <div>ユーザー</div>
+          <div
+            className='toggle_button'
+            onClick={() => handleExpandClick('user')}
+            style={{
+              height: '2.5rem',
+              userSelect: 'none',
+              cursor: 'pointer',
+              textAlign: 'center',
+            }}
+          >
+            <div>{expanded['user'] ? '▲' : '▼'}</div>
+          </div>
+          <div className='feed_add_button'>+</div>
         </div>
       </div>
     </div>
