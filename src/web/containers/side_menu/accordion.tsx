@@ -6,7 +6,8 @@ import {
   viewedWorksAtom,
   worksAtom,
 } from '../../atoms/atom';
-import { Link } from 'react-router-dom';
+import { NavLink } from 'react-router-dom';
+import './accordion.css';
 
 import DeleteIcon from '@mui/icons-material/Delete';
 import RefreshIcon from '@mui/icons-material/Refresh';
@@ -75,15 +76,24 @@ const MyAccordion = () => {
               margin: '0.5rem',
             }}
           >
-            <Link
+            <NavLink
               to={`/feed/${watchWork.id}`}
-              onClick={() => {
+              className={({ isActive, isPending }) =>
+                isActive
+                  ? 'feed_title active'
+                  : isPending
+                  ? 'pending'
+                  : 'feed_title'
+              }
+              onClick={(event) => {
+                console.log(event.target);
                 setWorksData(watchWork.workData);
               }}
             >
               <div>{watchWork.displayName}</div>
-            </Link>
-            <div style={{ display: 'flex' }}>
+            </NavLink>
+
+            <div style={{ display: 'flex', alignItems: 'flex-end' }}>
               <div
                 className='unread_update_container'
                 onMouseEnter={() => setHover({ [watchWork.id]: true })}
@@ -100,7 +110,12 @@ const MyAccordion = () => {
                       <RefreshIcon />
                     </div>
                   ) : (
-                    <div className='unread_number'>
+                    <div
+                      className='unread_number'
+                      style={{
+                        paddingBottom: '6px',
+                      }}
+                    >
                       {
                         watchWork.workData.filter(
                           (data) =>
