@@ -1,25 +1,29 @@
 import './App.css';
-import PermanentDrawerLeft from './containers/permanent_drawer';
-import { Routes, Route } from 'react-router-dom';
+import PermanentDrawerLeft from './containers/permanent_drawer/permanent_drawer';
+import { createHashRouter, RouterProvider } from 'react-router-dom';
 import About from './pages/about';
 import Settings from './pages/settings';
 
 import FeedPage from './pages/feed_page';
 import Home from './pages/home';
 
+const router = createHashRouter([
+  {
+    path: '/',
+    element: <PermanentDrawerLeft />,
+    children: [
+      { index: true, element: <Home /> },
+      { path: 'about', element: <About /> },
+      { path: 'settings', element: <Settings /> },
+      { path: '/feed/*', element: <FeedPage /> },
+    ],
+  },
+]);
+
 export const App = () => {
   return (
     <div className='container'>
-      <PermanentDrawerLeft
-        body={
-          <Routes>
-            <Route path='/' element={<Home />} />
-            <Route path='/about' element={<About />} />
-            <Route path='/settings' element={<Settings />} />
-            <Route path='/feed/*' element={<FeedPage />} />
-          </Routes>
-        }
-      />
+      <RouterProvider router={router} />
     </div>
   );
 };
