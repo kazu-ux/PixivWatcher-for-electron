@@ -54,3 +54,5 @@ export const searchQueryAtom = atom<SearchQuery>({
   searchMethod: 's_tag',
   targetAge: 'safe',
 });
+
+export const titleAtom = atom('ページタイトル');
