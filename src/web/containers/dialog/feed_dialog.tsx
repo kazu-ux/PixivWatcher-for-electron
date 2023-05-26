@@ -1,5 +1,7 @@
 import { useCallback } from 'react';
 import { useModal } from '../../customHooks/useModal';
+import { Provider } from 'jotai';
+import Home from '../../pages/home';
 
 export default function FeedDialog() {
   const { ref, showModal, closeModal } = useModal();
@@ -29,8 +31,9 @@ export default function FeedDialog() {
           className='dialog_body'
           style={{ height: '1600px' }}
         >
-          <div>dialog title</div>
-          <input type='text' name='' id='' />
+          <Provider>
+            <Home />
+          </Provider>
           <button onClick={closeModal}>close</button>
         </div>
       </dialog>
