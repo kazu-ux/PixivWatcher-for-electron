@@ -1,5 +1,5 @@
 import { useAtom } from 'jotai';
-import { useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import {
   deleteWatchWorkAtom,
   updateWatchWorkAtom,
@@ -12,6 +12,7 @@ import './accordion.css';
 import DeleteIcon from '@mui/icons-material/Delete';
 import RefreshIcon from '@mui/icons-material/Refresh';
 import { WatchWork } from '../../types/type';
+import FeedDialog from '../dialog/feed_dialog';
 
 const MyAccordion = () => {
   const [expanded, setExpanded] = useState({ tag: true, user: true });
@@ -170,7 +171,7 @@ const MyAccordion = () => {
           >
             <div>{expanded['user'] ? '▲' : '▼'}</div>
           </div>
-          <div className='feed_add_button'>+</div>
+          <FeedDialog></FeedDialog>
         </div>
       </div>
     </div>
