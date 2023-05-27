@@ -43,6 +43,18 @@ export default function WorkList() {
   });
 
   const watchWorkId = getWatchWorkId();
+
+  useEffect(() => {
+    if (!watchWorkId) return;
+    console.log('feed');
+    ref.current
+      ?.querySelectorAll('.viewed')
+      .forEach((element) => element.classList.add('hidden'));
+  }, [workData]);
+
+  // const watchWorkId = useCallback(() => getWatchWorkId(), []);
+  // console.log(watchWorkId());
+
   // console.log(watchWorkId);
 
   // useInterval(() => {
@@ -71,11 +83,11 @@ export default function WorkList() {
   //     window.scrollTo(0, 0);
 
   //     if (!watchWorkId) return;
-  //     if ((viewedWorks[watchWorkId] ?? ['']).includes(data.id)) {
+  //     /* if ((viewedWorks[watchWorkId] ?? ['']).includes(data.id)) {
   //       element?.classList.add('hidden');
-  //     }
+  //     } */
   //   },
-  //   [watchWorkId]
+  //   [watchWorkId()]
   // );
 
   return (
@@ -91,14 +103,16 @@ export default function WorkList() {
     >
       {workData.map((data, index) => (
         <div
-          ref={(element) => {
-            // callback(element, data);
-          }}
+          // ref={(element) => {
+          //   callback(element, data);
+          // }}
           key={data.id}
           id={data.id}
           className={
             classNames({
-              // hidden: (viewedWorks[watchWorkId] ?? ['']).includes(data.id),
+              viewed: (viewedWorks[watchWorkId ?? ''] ?? ['']).includes(
+                data.id
+              ),
             })
             /*      {
               block:
