@@ -43,6 +43,7 @@ export default function WorkList() {
   const watchWorkId = getWatchWorkId();
 
   useEffect(() => {
+    window.scrollTo(0, 0);
     if (!watchWorkId) return;
     console.log('feed');
     ref.current
