@@ -13,6 +13,7 @@ import DeleteIcon from '@mui/icons-material/Delete';
 import RefreshIcon from '@mui/icons-material/Refresh';
 import { WatchWork } from '../../types/type';
 import FeedDialog from '../dialog/feed_dialog';
+import getWatchWorkId from '../../utils/getWatchWorkId';
 
 const MyAccordion = () => {
   const [expanded, setExpanded] = useState({ tag: true, user: true });
@@ -38,10 +39,7 @@ const MyAccordion = () => {
       .sort((a, b) => Number(b.id) - Number(a.id));
     updateWatchWork(watchWork.id, { ...watchWork, workData: newWorksData });
 
-    const url = document.location.href;
-    if (!url.includes('/feed')) return;
-
-    const watchWorkId = url.split('/').at(-1);
+    const watchWorkId = getWatchWorkId();
     if (watchWorkId !== watchWork.id) return;
     setWorksData(newWorksData);
   };

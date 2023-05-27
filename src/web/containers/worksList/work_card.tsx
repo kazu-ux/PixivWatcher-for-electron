@@ -10,6 +10,7 @@ import {
 import { WorkData } from '../../types/type';
 import { produce } from 'immer';
 import { useOnScreen } from '../../customHooks/useOnScreen';
+import getWatchWorkId from '../../utils/getWatchWorkId';
 
 function WorkCard(props: { workData: WorkData }) {
   const { workData } = props;
@@ -27,9 +28,7 @@ function WorkCard(props: { workData: WorkData }) {
 
   const ref = useRef<HTMLDivElement>(null);
 
-  const handleExpandClick = () => {
-    setExpanded(!expanded);
-  };
+  const handleExpandClick = () => setExpanded(!expanded);
 
   /*   const handleFavorite = () => {
     const clickedIllustId = workData.id!;
@@ -45,10 +44,7 @@ function WorkCard(props: { workData: WorkData }) {
   }; */
 
   const handleWorkClick = () => {
-    const url = document.location.href;
-    if (!url.includes('/feed')) return;
-
-    const watchWorkId = url.split('/').at(-1);
+    const watchWorkId = getWatchWorkId();
     if (!watchWorkId) return;
 
     ref.current?.parentElement?.classList.add('viewed');
@@ -67,10 +63,7 @@ function WorkCard(props: { workData: WorkData }) {
   useEffect(() => {
     if (!ref.current) return;
     if (target === 'ABOVE_VIEWPORT') {
-      const url = document.location.href;
-      if (!url.includes('/feed')) return;
-
-      const watchWorkId = url.split('/').at(-1);
+      const watchWorkId = getWatchWorkId();
       if (!watchWorkId) return;
 
       ref.current?.parentElement?.classList.add('viewed');

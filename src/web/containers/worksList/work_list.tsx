@@ -8,6 +8,7 @@ import classNames from 'classnames';
 import useInterval from '../../customHooks/useInterval';
 import { produce } from 'immer';
 import { WorkData } from '../../types/type';
+import getWatchWorkId from '../../utils/getWatchWorkId';
 
 export default function WorkList() {
   const [workData] = useAtom(worksAtom);
@@ -15,8 +16,7 @@ export default function WorkList() {
   const [viewedWorksCount, setViewedWorksCount] = useState(0);
   const viewedWorkIds = useRef<string[]>([]);
 
-  const currentURL = document.location.href;
-  const watchWorkId = currentURL.split('/').at(-1) ?? '';
+  const watchWorkId = getWatchWorkId();
 
   useInterval(() => {
     const newViewedWorks = Array.from(document.querySelectorAll('.viewed')).map(
@@ -28,7 +28,6 @@ export default function WorkList() {
   }, 1000);
 
   useEffect(() => {
-    if (!currentURL.includes('/feed')) return;
     if (!watchWorkId || !viewedWorkIds.current.length) return;
 
     const newViewedWorks = produce(viewedWorks, (draft) => {
@@ -46,11 +45,12 @@ export default function WorkList() {
 
   const callback = useCallback(
     (element: HTMLDivElement | null, data: WorkData) => {
+      if (!watchWorkId) return;
       if ((viewedWorks[watchWorkId] ?? ['']).includes(data.id)) {
         element?.classList.add('hidden');
       }
     },
-    [currentURL, workData]
+    [workData]
   );
 
   return (
