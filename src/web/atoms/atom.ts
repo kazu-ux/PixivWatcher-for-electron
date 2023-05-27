@@ -8,6 +8,7 @@ import {
   WorkData,
   viewedWorks,
 } from '../types/type';
+import { produce } from 'immer';
 
 export const countAtom = atom(0);
 export const openAtom = atom(false);
@@ -25,7 +26,25 @@ export const blockUsersAtom = atom<string[]>([
 ]);
 export const blockTagsAtom = atom<string[]>([]);
 export const favoritesAtom = atom<string[]>([]);
-export const viewedWorksAtom = atomWithStorage<viewedWorks>('viewedWorks', {});
+const viewedWorksAtom = atomWithStorage<viewedWorks>('viewedWorks', {});
+export const updateViewedWorksAtom = atom(
+  (get) => get(viewedWorksAtom),
+  (get, set, viewedWork: viewedWorks) => {
+    const newViewedWorks = produce(get(viewedWorksAtom), (draft) => {
+      const watchWorkId = Object.keys(viewedWork)[0];
+      const uniqueWatchWorkIds = Array.from(
+        new Set([
+          ...(draft[watchWorkId] ?? []),
+          ...Object.values(viewedWork)[0],
+        ])
+      );
+      draft[watchWorkId] = uniqueWatchWorkIds;
+    });
+
+    set(viewedWorksAtom, newViewedWorks);
+    console.log(newViewedWorks);
+  }
+);
 
 export const searchWordAtom = atom<string>('');
 export const searchUrlAtom = atom<string>('');

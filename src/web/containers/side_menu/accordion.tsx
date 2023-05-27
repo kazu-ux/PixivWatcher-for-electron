@@ -3,7 +3,7 @@ import { useCallback, useEffect, useState } from 'react';
 import {
   deleteWatchWorkAtom,
   updateWatchWorkAtom,
-  viewedWorksAtom,
+  updateViewedWorksAtom,
   worksAtom,
 } from '../../atoms/atom';
 import { NavLink } from 'react-router-dom';
@@ -19,7 +19,7 @@ const MyAccordion = () => {
   const [expanded, setExpanded] = useState({ tag: true, user: true });
   const [watchWorks, deleteWatchWork] = useAtom(deleteWatchWorkAtom);
   const [, setWorksData] = useAtom(worksAtom);
-  const [viewedWorks] = useAtom(viewedWorksAtom);
+  const [viewedWorks] = useAtom(updateViewedWorksAtom);
   const [, updateWatchWork] = useAtom(updateWatchWorkAtom);
   const [hover, setHover] = useState<{ [key: string]: boolean }>({});
 

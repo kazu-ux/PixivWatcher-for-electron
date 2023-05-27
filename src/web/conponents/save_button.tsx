@@ -5,7 +5,7 @@ import {
   searchWordAtom,
   watchWorksAtom,
   searchUrlAtom,
-  viewedWorksAtom,
+  updateViewedWorksAtom,
 } from '../atoms/atom';
 import { WatchWorks } from '../types/type';
 import { produce } from 'immer';
@@ -16,7 +16,7 @@ const SaveButton = () => {
   const [watchWorks, setWatchWorks] = useAtom(watchWorksAtom);
   const [searchURL] = useAtom(searchUrlAtom);
 
-  const [viewedWorks, setViewedWorks] = useAtom(viewedWorksAtom);
+  const [viewedWorks, setViewedWorks] = useAtom(updateViewedWorksAtom);
 
   const handleButton = async () => {
     const now = new Date().getTime().toString();

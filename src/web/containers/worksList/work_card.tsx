@@ -5,7 +5,7 @@ import {
   // blockTagsAtom,
   // blockUsersAtom,
   // favoritesAtom,
-  viewedWorksAtom,
+  updateViewedWorksAtom,
 } from '../../atoms/atom';
 import { WorkData } from '../../types/type';
 import { produce } from 'immer';
@@ -20,7 +20,7 @@ function WorkCard(props: { workData: WorkData }) {
   // const [blockTags, setBlockTags] = useAtom(blockTagsAtom);
   // const [favorites, setFavorites] = useAtom(favoritesAtom);
 
-  const [viewedWorks, setViewedWorks] = useAtom(viewedWorksAtom);
+  const [viewedWorks, updateViewedWork] = useAtom(updateViewedWorksAtom);
 
   const itemURL = `https://www.pixiv.net/artworks/${workData.id}`;
   const UserURL = `https://www.pixiv.net/users/${workData.userId}`;
@@ -53,7 +53,7 @@ function WorkCard(props: { workData: WorkData }) {
       draft[watchWorkId] = [...draft[watchWorkId], workData.id];
     });
 
-    setViewedWorks(newViewedWorks);
+    // setViewedWorks(newViewedWorks);
   };
 
   /*   const hasDuplicateElements = (arr1: string[], arr2: string[]): boolean =>
