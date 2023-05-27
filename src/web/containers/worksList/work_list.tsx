@@ -50,7 +50,7 @@ export default function WorkList() {
         element?.classList.add('hidden');
       }
     },
-    [currentURL]
+    [currentURL, workData]
   );
 
   return (
