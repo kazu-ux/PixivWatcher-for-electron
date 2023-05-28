@@ -6,8 +6,6 @@ import { updateViewedWorksAtom, worksAtom } from '../../atoms/atom';
 import WorkCard from './work_card';
 import classNames from 'classnames';
 
-import { produce } from 'immer';
-
 import getWatchWorkId from '../../utils/getWatchWorkId';
 import useMutationObserver from '../../customHooks/useMutationObserver';
 
@@ -27,10 +25,7 @@ export default function WorkList() {
       .map((element) => element.id);
     if (!viewedWorkIds.length) return;
 
-    const newViewedWorks = produce(viewedWorks, (draft) => {
-      draft[watchWorkId] = viewedWorkIds;
-    });
-    updateViewedWork(newViewedWorks);
+    updateViewedWork(watchWorkId, viewedWorkIds);
   };
 
   useMutationObserver(ref, mutationObserverCallback, {
@@ -45,7 +40,6 @@ export default function WorkList() {
   useEffect(() => {
     window.scrollTo(0, 0);
     if (!watchWorkId) return;
-    console.log('feed');
     ref.current
       ?.querySelectorAll('.viewed')
       .forEach((element) => element.classList.add('hidden'));

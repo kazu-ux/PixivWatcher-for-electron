@@ -29,14 +29,10 @@ export const favoritesAtom = atom<string[]>([]);
 const viewedWorksAtom = atomWithStorage<viewedWorks>('viewedWorks', {});
 export const updateViewedWorksAtom = atom(
   (get) => get(viewedWorksAtom),
-  (get, set, viewedWork: viewedWorks) => {
+  (get, set, watchWorkId: string, workIds: string[]) => {
     const newViewedWorks = produce(get(viewedWorksAtom), (draft) => {
-      const watchWorkId = Object.keys(viewedWork)[0];
       const uniqueWatchWorkIds = Array.from(
-        new Set([
-          ...(draft[watchWorkId] ?? []),
-          ...Object.values(viewedWork)[0],
-        ])
+        new Set([...(draft[watchWorkId] ?? []), ...workIds])
       );
       draft[watchWorkId] = uniqueWatchWorkIds;
     });

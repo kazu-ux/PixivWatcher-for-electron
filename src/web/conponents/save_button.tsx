@@ -16,7 +16,7 @@ const SaveButton = () => {
   const [watchWorks, setWatchWorks] = useAtom(watchWorksAtom);
   const [searchURL] = useAtom(searchUrlAtom);
 
-  const [viewedWorks, setViewedWorks] = useAtom(updateViewedWorksAtom);
+  const [, setViewedWorks] = useAtom(updateViewedWorksAtom);
 
   const handleButton = async () => {
     const now = new Date().getTime().toString();
@@ -31,10 +31,7 @@ const SaveButton = () => {
     };
     setWatchWorks({ ...watchWorks, ...newWatchWork });
 
-    const newViewedWorks = produce(viewedWorks, (draft) => {
-      draft[now] = [];
-    });
-    setViewedWorks(newViewedWorks);
+    setViewedWorks(now, []);
   };
 
   return <Button onClick={handleButton}>新着通知に登録</Button>;
