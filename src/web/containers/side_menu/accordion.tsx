@@ -1,10 +1,10 @@
 import { useAtom } from 'jotai';
-import { useCallback, useEffect, useState } from 'react';
+import { useState } from 'react';
 import {
   deleteWatchWorkAtom,
   updateWatchWorkAtom,
   updateViewedWorksAtom,
-  worksAtom,
+  updateWorksAtom,
 } from '../../atoms/atom';
 import { NavLink } from 'react-router-dom';
 import './accordion.css';
@@ -18,7 +18,7 @@ import getWatchWorkId from '../../utils/getWatchWorkId';
 const MyAccordion = () => {
   const [expanded, setExpanded] = useState({ tag: true, user: true });
   const [watchWorks, deleteWatchWork] = useAtom(deleteWatchWorkAtom);
-  const [, setWorksData] = useAtom(worksAtom);
+  const [, setWorksData] = useAtom(updateWorksAtom);
   const [viewedWorks] = useAtom(updateViewedWorksAtom);
   const [, updateWatchWork] = useAtom(updateWatchWorkAtom);
   const [hover, setHover] = useState<{ [key: string]: boolean }>({});

@@ -2,7 +2,7 @@ import './App.css';
 import PermanentDrawerLeft from './containers/permanent_drawer/permanent_drawer';
 import { createHashRouter, RouterProvider } from 'react-router-dom';
 import About from './pages/about';
-import Settings from './pages/settings';
+import Settings from './pages/settings/settings';
 
 import FeedPage from './pages/feed_page';
 import Home from './pages/home';

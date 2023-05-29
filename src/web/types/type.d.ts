@@ -38,7 +38,14 @@ export type WorkData = {
   seriesId?: string;
   seriesTitle?: string;
   isAdContainer?: boolean;
+  isBlocked?: boolean;
 };
+
+export interface BlockType {
+  readonly id: number;
+  name: string;
+  registeredTime: number;
+}
 
 export interface Candidates {
   candidates?: CandidatesEntity[] | null;

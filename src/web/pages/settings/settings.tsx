@@ -19,6 +19,9 @@ import {
 } from '@mui/material';
 import NotificationsActiveIcon from '@mui/icons-material/NotificationsActive';
 import { useState } from 'react';
+import BlockTable from './block_table';
+import { useAtom } from 'jotai';
+import { updateBlockUserAtom, updateBlockTagAtom } from '../../atoms/atom';
 
 interface State extends SnackbarOrigin {
   open: boolean;
@@ -30,6 +33,9 @@ const Settings = () => {
     vertical: 'top',
     horizontal: 'right',
   });
+
+  const [blockUsers] = useAtom(updateBlockUserAtom);
+  const [blockTags] = useAtom(updateBlockTagAtom);
 
   const Item = styled(Paper)(({ theme }) => ({
     backgroundColor: theme.palette.mode === 'dark' ? '#1A2027' : '#fff',
@@ -50,21 +56,6 @@ const Settings = () => {
   const handleClose = () => {
     setState({ open: false, vertical: 'top', horizontal: 'right' });
   };
-
-  <List>
-    <ListItem disablePadding>
-      <ListItemButton>
-        <ListItemIcon></ListItemIcon>
-        <ListItemText primary='Inbox' />
-      </ListItemButton>
-    </ListItem>
-    <ListItem disablePadding>
-      <ListItemButton>
-        <ListItemIcon></ListItemIcon>
-        <ListItemText primary='Drafts' />
-      </ListItemButton>
-    </ListItem>
-  </List>;
 
   return (
     <Box>
@@ -96,7 +87,7 @@ const Settings = () => {
             control={
               <Switch
                 // checked={true}
-                onChange={() => {}}
+                // onChange={() => {}}
                 name='checkedB'
                 color='primary'
               />
@@ -107,7 +98,7 @@ const Settings = () => {
             control={
               <Switch
                 checked={true}
-                onChange={() => {}}
+                // onChange={() => {}}
                 name='checkedB'
                 color='primary'
               />
@@ -118,7 +109,7 @@ const Settings = () => {
             control={
               <Switch
                 checked={true}
-                onChange={() => {}}
+                // onChange={() => {}}
                 name='checkedB'
                 color='primary'
               />
@@ -134,6 +125,19 @@ const Settings = () => {
         message='テスト'
         autoHideDuration={3000}
       ></Snackbar>
+      <hr />
+      <div className='block_user_container'>
+        <div>ブロックするユーザー</div>
+        <div className='block_table'>
+          <BlockTable data={blockUsers} />
+        </div>
+      </div>
+      <div className='block_tag_container'>
+        <div>ブロックするタグ</div>
+        <div className='block_table'>
+          <BlockTable data={blockTags} />
+        </div>
+      </div>
     </Box>
   );
 };

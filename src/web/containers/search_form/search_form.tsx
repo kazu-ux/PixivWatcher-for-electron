@@ -3,7 +3,7 @@ import { ChangeEvent, useEffect, useState } from 'react';
 
 import { useAtom } from 'jotai';
 import {
-  worksAtom,
+  updateWorksAtom,
   searchWordAtom,
   searchQueryAtom,
   searchUrlAtom,
@@ -16,7 +16,7 @@ import { useDebounce } from 'use-debounce';
 const SearchForm = () => {
   const [inputText, setInputText] = useAtom(searchWordAtom);
   // const [candidates, setCandidates] = useState<CandidatesEntity[]>([]);
-  const [, setWorksData] = useAtom(worksAtom);
+  const [, setWorksData] = useAtom(updateWorksAtom);
   const debouncedInputText = useDebounce(inputText, 1000);
 
   const [composing, setComposition] = useState(false);

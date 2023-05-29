@@ -2,8 +2,9 @@ import { memo, useEffect, useRef, useState } from 'react';
 
 import { useAtom } from 'jotai';
 import {
+  updateBlockTagAtom,
   // blockTagsAtom,
-  // blockUsersAtom,
+  updateBlockUserAtom,
   // favoritesAtom,
   updateViewedWorksAtom,
 } from '../../atoms/atom';
@@ -16,11 +17,9 @@ function WorkCard(props: { workData: WorkData }) {
   const { workData } = props;
   const [expanded, setExpanded] = useState(false);
 
-  // const [blockUsers, setBlockUsers] = useAtom(blockUsersAtom);
-  // const [blockTags, setBlockTags] = useAtom(blockTagsAtom);
+  const [blockUsers, updateBlockUser] = useAtom(updateBlockUserAtom);
+  const [blockTags, updateBlockTag] = useAtom(updateBlockTagAtom);
   // const [favorites, setFavorites] = useAtom(favoritesAtom);
-
-  const [viewedWorks, updateViewedWork] = useAtom(updateViewedWorksAtom);
 
   const itemURL = `https://www.pixiv.net/artworks/${workData.id}`;
   const UserURL = `https://www.pixiv.net/users/${workData.userId}`;
@@ -48,12 +47,26 @@ function WorkCard(props: { workData: WorkData }) {
     if (!watchWorkId) return;
 
     ref.current?.parentElement?.classList.add('viewed');
+  };
 
-    const newViewedWorks = produce(viewedWorks, (draft) => {
-      draft[watchWorkId] = [...draft[watchWorkId], workData.id];
+  const handleBlockUser = (userName: string, userId: string) => {
+    const now = new Date().getTime();
+
+    updateBlockUser({
+      name: userName,
+      id: Number(userId),
+      registeredTime: now,
     });
+  };
 
-    // setViewedWorks(newViewedWorks);
+  const handleBlockTag = (tagName: string) => {
+    const now = new Date().getTime();
+
+    updateBlockTag({
+      name: tagName,
+      id: now,
+      registeredTime: now,
+    });
   };
 
   /*   const hasDuplicateElements = (arr1: string[], arr2: string[]): boolean =>
@@ -149,6 +162,7 @@ function WorkCard(props: { workData: WorkData }) {
             userSelect: 'none',
             cursor: 'pointer',
           }}
+          onClick={() => handleBlockUser(workData.userName, workData.userId)}
         >
           {'[+]'}
         </div>
@@ -193,6 +207,7 @@ function WorkCard(props: { workData: WorkData }) {
                     userSelect: 'none',
                     cursor: 'pointer',
                   }}
+                  onClick={() => handleBlockTag(tag)}
                 >
                   {'[+]'}
                 </div>

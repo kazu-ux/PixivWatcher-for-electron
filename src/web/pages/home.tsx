@@ -2,11 +2,11 @@ import SaveButton from '../conponents/save_button';
 import SearchForm from '../containers/search_form/search_form';
 import { useEffect } from 'react';
 import { useAtom } from 'jotai';
-import { worksAtom } from '../atoms/atom';
+import { updateWorksAtom } from '../atoms/atom';
 import WorkList from '../containers/worksList/work_list';
 
 export default function Home() {
-  const [worksData, setWorksData] = useAtom(worksAtom);
+  const [, setWorksData] = useAtom(updateWorksAtom);
 
   useEffect(() => {
     setWorksData([]);
@@ -22,7 +22,7 @@ export default function Home() {
     >
       <SearchForm></SearchForm>
       <SaveButton></SaveButton>
-      {worksData.length ? <WorkList></WorkList> : <></>}
+      <WorkList></WorkList>
     </div>
   );
 }

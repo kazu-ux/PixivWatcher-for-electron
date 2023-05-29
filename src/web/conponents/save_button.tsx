@@ -1,35 +1,32 @@
 import { Button } from '@mui/material';
 import { useAtom } from 'jotai';
 import {
-  worksAtom,
+  filteredWorksAtom,
   searchWordAtom,
-  watchWorksAtom,
+  updateWatchWorkAtom,
   searchUrlAtom,
   updateViewedWorksAtom,
 } from '../atoms/atom';
-import { WatchWorks } from '../types/type';
-import { produce } from 'immer';
+import { WatchWork } from '../types/type';
 
 const SaveButton = () => {
   const [searchWord] = useAtom(searchWordAtom);
-  const [worksData] = useAtom(worksAtom);
-  const [watchWorks, setWatchWorks] = useAtom(watchWorksAtom);
+  const [worksData] = useAtom(filteredWorksAtom);
+  const [, setWatchWorks] = useAtom(updateWatchWorkAtom);
   const [searchURL] = useAtom(searchUrlAtom);
 
   const [, setViewedWorks] = useAtom(updateViewedWorksAtom);
 
   const handleButton = async () => {
     const now = new Date().getTime().toString();
-    const newWatchWork: WatchWorks = {
-      [now]: {
-        id: now,
-        displayName: searchWord,
-        workData: worksData,
-        url: searchURL,
-        category: 'tag',
-      },
+    const newWatchWork: WatchWork = {
+      id: now,
+      displayName: searchWord,
+      workData: worksData,
+      url: searchURL,
+      category: 'tag',
     };
-    setWatchWorks({ ...watchWorks, ...newWatchWork });
+    setWatchWorks(now, newWatchWork);
 
     setViewedWorks(now, []);
   };

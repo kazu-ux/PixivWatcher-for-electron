@@ -1,8 +1,8 @@
-import { useEffect, useRef } from 'react';
+import { useCallback, useEffect, useRef } from 'react';
 import './work_list.css';
 
 import { useAtom } from 'jotai';
-import { updateViewedWorksAtom, worksAtom } from '../../atoms/atom';
+import { updateViewedWorksAtom, filteredWorksAtom } from '../../atoms/atom';
 import WorkCard from './work_card';
 import classNames from 'classnames';
 
@@ -10,12 +10,12 @@ import getWatchWorkId from '../../utils/getWatchWorkId';
 import useMutationObserver from '../../customHooks/useMutationObserver';
 
 export default function WorkList() {
-  const [workData] = useAtom(worksAtom);
+  const [workData] = useAtom(filteredWorksAtom);
   const [viewedWorks, updateViewedWork] = useAtom(updateViewedWorksAtom);
 
   const ref = useRef<HTMLDivElement>(null);
 
-  const mutationObserverCallback = (records: MutationRecord[]) => {
+  const mutationObserverCallback = useCallback((records: MutationRecord[]) => {
     const watchWorkId = getWatchWorkId();
     if (!watchWorkId) return;
     const viewedWorkIds = records
@@ -26,7 +26,7 @@ export default function WorkList() {
     if (!viewedWorkIds.length) return;
 
     updateViewedWork(watchWorkId, viewedWorkIds);
-  };
+  }, []);
 
   useMutationObserver(ref, mutationObserverCallback, {
     attributes: true,
@@ -56,27 +56,14 @@ export default function WorkList() {
         gridTemplateRows: 'auto',
       }}
     >
-      {workData.map((data, index) => (
+      {workData.map((data) => (
         <div
           key={data.id}
           id={data.id}
-          className={
-            classNames({
-              viewed: (viewedWorks[watchWorkId ?? ''] ?? ['']).includes(
-                data.id
-              ),
-            })
-            /*      {
-              block:
-                hasDuplicateElements(tags, blockTags) ||
-                hasDuplicateElements([userId!], blockUsers),
-            },
-            {
-              hidden:
-                hasDuplicateElements(tags, blockTags) ||
-                hasDuplicateElements([userId!], blockUsers),
-            }, */
-          }
+          className={classNames({
+            viewed: (viewedWorks[watchWorkId ?? ''] ?? ['']).includes(data.id),
+            hidden: data.isBlocked,
+          })}
         >
           <WorkCard workData={data}></WorkCard>
         </div>

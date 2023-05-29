@@ -30,7 +30,7 @@ app.whenReady().then(async () => {
   mainWindow.loadFile('dist/index.html');
 
   mainWindow.webContents.openDevTools({ mode: 'detach' });
-  mainWindow.webContents.reloadIgnoringCache();
+  // mainWindow.webContents.reloadIgnoringCache();
 
   ipcMain.handle('requestWorks', async (event, searchURL) => {
     interface NestedObject {
