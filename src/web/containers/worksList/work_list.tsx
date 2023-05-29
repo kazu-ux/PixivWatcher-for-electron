@@ -1,48 +1,64 @@
-import { useCallback, useEffect, useRef } from 'react';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import './work_list.css';
 
 import { useAtom } from 'jotai';
-import { updateViewedWorksAtom, filteredWorksAtom } from '../../atoms/atom';
+import { filteredWorksAtom } from '../../atoms/atom';
 import WorkCard from './work_card';
 import classNames from 'classnames';
 
 import getWatchWorkId from '../../utils/getWatchWorkId';
 import useMutationObserver from '../../customHooks/useMutationObserver';
+import { useLocation } from 'react-router-dom';
 
 export default function WorkList() {
   const [workData] = useAtom(filteredWorksAtom);
-  const [viewedWorks, updateViewedWork] = useAtom(updateViewedWorksAtom);
+  const currentURL = useLocation();
 
   const ref = useRef<HTMLDivElement>(null);
 
-  const mutationObserverCallback = useCallback((records: MutationRecord[]) => {
-    const watchWorkId = getWatchWorkId();
-    if (!watchWorkId) return;
-    const viewedWorkIds = records
-      .map((record) => record.target as HTMLElement)
-      .filter((element) => element.classList.contains('viewed'))
-      .filter((element) => !element.classList.contains('hidden'))
-      .map((element) => element.id);
-    if (!viewedWorkIds.length) return;
+  useEffect(() => {
+    console.log(currentURL);
+    ref.current
+      ?.querySelectorAll('.viewed')
+      .forEach((element) => element.classList.add('hidden'));
+  }, [currentURL.pathname]);
 
-    updateViewedWork(watchWorkId, viewedWorkIds);
-  }, []);
+  const mutationObserverCallback = useCallback(
+    (records: MutationRecord[]) => {
+      console.log('mutationobserver');
+
+      const watchWorkId = getWatchWorkId();
+      if (!watchWorkId) return;
+
+      // const viewedWorkIds = records
+      //   .map((record) => record.target as HTMLElement)
+      //   .filter((element) => element.classList.contains('viewed'))
+      //   .filter((element) => !element.classList.contains('hidden'))
+      //   .map((element) => element.id);
+      // if (!viewedWorkIds.length) return;
+
+      // updateViewedWork(watchWorkId, viewedWorkIds);
+    },
+    [workData]
+  );
 
   useMutationObserver(ref, mutationObserverCallback, {
     attributes: true,
     characterData: false,
-    childList: false,
-    subtree: true,
+    childList: true,
+    subtree: false,
   });
 
   const watchWorkId = getWatchWorkId();
 
   useEffect(() => {
-    window.scrollTo(0, 0);
+    console.log('workdata');
+
+    // window.scrollTo(0, 0);
     if (!watchWorkId) return;
-    ref.current
-      ?.querySelectorAll('.viewed')
-      .forEach((element) => element.classList.add('hidden'));
+    // ref.current
+    //   ?.querySelectorAll('.viewed')
+    //   .forEach((element) => element.classList.add('hidden'));
   }, [workData]);
 
   return (
@@ -61,8 +77,10 @@ export default function WorkList() {
           key={data.id}
           id={data.id}
           className={classNames({
-            viewed: (viewedWorks[watchWorkId ?? ''] ?? ['']).includes(data.id),
-            hidden: data.isBlocked,
+            // viewed: (viewedWorks[watchWorkId ?? ''] ?? ['']).includes(data.id),
+            viewed: data.isWatched,
+
+            // hidden: data.isBlocked,
           })}
         >
           <WorkCard workData={data}></WorkCard>

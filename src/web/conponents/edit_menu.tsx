@@ -7,12 +7,12 @@ import { IconButton } from '@mui/material';
 import MoreVertIcon from '@mui/icons-material/MoreVert';
 
 import { useAtom } from 'jotai';
-import { deleteWatchWorkAtom } from '../atoms/atom';
+import { deleteFeedWorkAtom } from '../atoms/atom';
 import { WatchWork } from '../types/type';
 
 export default function EditMenu(props: WatchWork) {
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
-  const [watchWorks, setWatchWorks] = useAtom(deleteWatchWorkAtom);
+  const [watchWorks, setWatchWorks] = useAtom(deleteFeedWorkAtom);
 
   const open = Boolean(anchorEl);
   const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {

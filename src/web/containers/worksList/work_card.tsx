@@ -6,7 +6,9 @@ import {
   // blockTagsAtom,
   updateBlockUserAtom,
   // favoritesAtom,
-  updateViewedWorksAtom,
+  updateWorksAtom,
+  addWatchedAtom,
+  updateFeedWorkAtom,
 } from '../../atoms/atom';
 import { WorkData } from '../../types/type';
 import { produce } from 'immer';
@@ -19,7 +21,8 @@ function WorkCard(props: { workData: WorkData }) {
 
   const [blockUsers, updateBlockUser] = useAtom(updateBlockUserAtom);
   const [blockTags, updateBlockTag] = useAtom(updateBlockTagAtom);
-  // const [favorites, setFavorites] = useAtom(favoritesAtom);
+  const [, updateWorks] = useAtom(updateWorksAtom);
+  const [, addWatched] = useAtom(addWatchedAtom);
 
   const itemURL = `https://www.pixiv.net/artworks/${workData.id}`;
   const UserURL = `https://www.pixiv.net/users/${workData.userId}`;
@@ -29,24 +32,13 @@ function WorkCard(props: { workData: WorkData }) {
 
   const handleExpandClick = () => setExpanded(!expanded);
 
-  /*   const handleFavorite = () => {
-    const clickedIllustId = workData.id!;
-    // favoritesにclickedIllustIdが含まれているかどうかを判定する
-    const isFavorite = favorites.includes(clickedIllustId);
-    // isFavoriteがtrueならclickedIllustIdを除外し、falseなら追加する
-    const newFavorites = isFavorite
-      ? favorites.filter((favorite) => favorite !== clickedIllustId)
-      : [...favorites, clickedIllustId];
-    // newFavoritesをセットする
-    setFavorites(newFavorites);
-    console.log(favorites);
-  }; */
-
   const handleWorkClick = () => {
     const watchWorkId = getWatchWorkId();
     if (!watchWorkId) return;
 
-    ref.current?.parentElement?.classList.add('viewed');
+    addWatched(watchWorkId, workData);
+
+    // ref.current?.parentElement?.classList.add('viewed');
   };
 
   const handleBlockUser = (userName: string, userId: string) => {
@@ -78,10 +70,26 @@ function WorkCard(props: { workData: WorkData }) {
     if (target === 'ABOVE_VIEWPORT') {
       const watchWorkId = getWatchWorkId();
       if (!watchWorkId) return;
+      // console.log(workData);
+      addWatched(watchWorkId, workData);
 
-      ref.current?.parentElement?.classList.add('viewed');
+      // updateWorks([workData]);
+      // ref.current?.parentElement?.classList.add('viewed');
     }
   }, [target]);
+
+  // const [isVisible, setIsVisible] = useState(false);
+
+  // const toggleVisibility = () => {
+  //   console.log(isVisible);
+
+  //   window.scrollY > 500 ? setIsVisible(true) : setIsVisible(false);
+  // };
+
+  // useEffect(() => {
+  //   window.addEventListener('scroll', toggleVisibility);
+  //   return () => window.removeEventListener('scroll', toggleVisibility);
+  // }, []);
 
   return (
     <div

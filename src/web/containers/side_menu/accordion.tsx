@@ -1,9 +1,8 @@
 import { useAtom } from 'jotai';
 import { useState } from 'react';
 import {
-  deleteWatchWorkAtom,
-  updateWatchWorkAtom,
-  updateViewedWorksAtom,
+  deleteFeedWorkAtom,
+  updateFeedWorkAtom,
   updateWorksAtom,
 } from '../../atoms/atom';
 import { NavLink } from 'react-router-dom';
@@ -17,10 +16,9 @@ import getWatchWorkId from '../../utils/getWatchWorkId';
 
 const MyAccordion = () => {
   const [expanded, setExpanded] = useState({ tag: true, user: true });
-  const [watchWorks, deleteWatchWork] = useAtom(deleteWatchWorkAtom);
-  const [, setWorksData] = useAtom(updateWorksAtom);
-  const [viewedWorks] = useAtom(updateViewedWorksAtom);
-  const [, updateWatchWork] = useAtom(updateWatchWorkAtom);
+  const [watchWorks, deleteWatchWork] = useAtom(deleteFeedWorkAtom);
+  const [worksData, setWorksData] = useAtom(updateWorksAtom);
+  const [, updateWatchWork] = useAtom(updateFeedWorkAtom);
   const [hover, setHover] = useState<{ [key: string]: boolean }>({});
 
   const handleExpandClick = (target: 'tag' | 'user') =>
@@ -37,7 +35,7 @@ const MyAccordion = () => {
       )
       .slice()
       .sort((a, b) => Number(b.id) - Number(a.id));
-    updateWatchWork(watchWork.id, { ...watchWork, workData: newWorksData });
+    updateWatchWork(watchWork.id, newWorksData);
 
     const watchWorkId = getWatchWorkId();
     if (watchWorkId !== watchWork.id) return;
@@ -93,7 +91,6 @@ const MyAccordion = () => {
                     : 'feed_title'
                 }
                 onClick={(event) => {
-                  console.log(event.target);
                   setWorksData(watchWork.workData);
                 }}
               >
@@ -124,12 +121,8 @@ const MyAccordion = () => {
                         }}
                       >
                         {
-                          watchWork.workData.filter(
-                            (data) =>
-                              !(viewedWorks[watchWork.id] ?? ['']).includes(
-                                data.id
-                              )
-                          ).length
+                          watchWork.workData.filter((work) => !work.isWatched)
+                            .length
                         }
                       </div>
                     )}

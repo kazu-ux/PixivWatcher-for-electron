@@ -39,6 +39,7 @@ export type WorkData = {
   seriesTitle?: string;
   isAdContainer?: boolean;
   isBlocked?: boolean;
+  isWatched?: boolean;
 };
 
 export interface BlockType {
