@@ -10,7 +10,6 @@ export default function Home() {
 
   useEffect(() => {
     setWorksData([]);
-    console.log();
   }, []);
   return (
     <div

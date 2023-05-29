@@ -23,7 +23,6 @@ export default function Header() {
             sx={{ mr: 2 }}
             onClick={() => {
               setOpen(true);
-              console.log('clicked');
             }}
           >
             <MenuIcon />
