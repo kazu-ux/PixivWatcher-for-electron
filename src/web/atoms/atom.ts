@@ -56,10 +56,9 @@ export const updateWorksAtom = atom(
     const filteredWokrs: WorkData[] = works.map((work) =>
       hasDuplicateElements([work.userId], blockUsers) ||
       hasDuplicateElements(work.tags, blockTags)
-        ? { ...work, isBlocked: true }
+        ? { ...work, isBlocked: true, isWatched: true }
         : { ...work, isBlocked: false }
     );
-
     set(worksAtom, filteredWokrs);
   }
 );

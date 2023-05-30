@@ -63,10 +63,8 @@ export default function WorkList() {
           key={data.id}
           id={data.id}
           className={classNames({
-            // viewed: (viewedWorks[watchWorkId ?? ''] ?? ['']).includes(data.id),
             viewed: data.isWatched,
-
-            // hidden: data.isBlocked,
+            hidden: data.isBlocked,
           })}
         >
           <WorkCard workData={data}></WorkCard>
