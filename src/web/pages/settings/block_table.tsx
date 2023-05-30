@@ -13,7 +13,105 @@ interface Column {
   sortOrder: SortOrder;
 }
 
-export default function BlockTable(props: { data: BlockType[] }) {
+interface RowProps {
+  user: BlockType;
+  index: number;
+  selectedRows: number[];
+  handleRowClick: (
+    index: number,
+    event: React.MouseEvent<HTMLTableRowElement>
+  ) => void;
+}
+
+interface HeaderProps {
+  column: Column;
+  handleHeaderClick: (columnId: 'id' | 'name' | 'registeredTime') => void;
+}
+
+interface PaginationProps {
+  currentPage: number;
+  totalPages: number;
+  handlePrevPage: () => void;
+  handleNextPage: () => void;
+  canGoPrevPage: boolean;
+  canGoNextPage: boolean;
+}
+
+const Row: React.FC<RowProps> = ({
+  user,
+  index,
+  selectedRows,
+  handleRowClick,
+}: RowProps) => {
+  const rowStyle = {
+    cursor: 'pointer',
+  };
+
+  const selectedRowStyle = {
+    background: 'lightblue',
+    cursor: 'pointer',
+  };
+
+  return (
+    <tr
+      key={user.id}
+      style={selectedRows.includes(index) ? selectedRowStyle : rowStyle}
+      onClick={(event) => handleRowClick(index, event)}
+    >
+      <td>{user.id}</td>
+      <td>{user.name}</td>
+      <td>{user.registeredTime}</td>
+    </tr>
+  );
+};
+
+const Header: React.FC<HeaderProps> = ({
+  column,
+  handleHeaderClick,
+}: HeaderProps) => {
+  const renderSortArrow = (column: Column): React.ReactNode => {
+    if (column.sortOrder === SortOrder.ASCENDING) {
+      return <span>&#9650;</span>; // ▲
+    } else if (column.sortOrder === SortOrder.DESCENDING) {
+      return <span>&#9660;</span>; // ▼
+    } else {
+      return null;
+    }
+  };
+
+  return (
+    <th onClick={() => handleHeaderClick(column.id)}>
+      {column.label} {renderSortArrow(column)}
+    </th>
+  );
+};
+
+const Pagination: React.FC<PaginationProps> = ({
+  currentPage,
+  totalPages,
+  handlePrevPage,
+  handleNextPage,
+  canGoPrevPage,
+  canGoNextPage,
+}: PaginationProps) => {
+  return (
+    <div style={{ marginTop: '10px', textAlign: 'start' }}>
+      <button onClick={handlePrevPage} disabled={!canGoPrevPage}>
+        {'< 前へ'}
+      </button>
+      <span style={{ margin: '0 10px' }}>
+        Page {currentPage + 1} of {totalPages}
+      </span>
+      <button onClick={handleNextPage} disabled={!canGoNextPage}>
+        {'次へ >'}
+      </button>
+    </div>
+  );
+};
+
+const BlockTable: React.FC<{ data: BlockType[] }> = (props: {
+  data: BlockType[];
+}) => {
   const [rows, setRows] = useState(props.data);
   const [selectedRows, setSelectedRows] = useState<number[]>([]);
   const [lastClickedRowIndex, setLastClickedRowIndex] = useState<number | null>(
@@ -27,31 +125,19 @@ export default function BlockTable(props: { data: BlockType[] }) {
 
   const [currentPage, setCurrentPage] = useState<number>(0);
   const pageSize = 10; // ページあたりの行数
-
   const totalPages = Math.ceil(rows.length / pageSize);
-
-  const rowStyle = {
-    cursor: 'pointer',
-  };
-
-  const selectedRowStyle = {
-    background: 'lightblue',
-    cursor: 'pointer',
-  };
 
   const handleRowClick = (
     index: number,
     event: React.MouseEvent<HTMLTableRowElement>
   ) => {
     if (event.ctrlKey || event.metaKey) {
-      // CtrlキーまたはCommandキー（Mac）が押されている場合
       if (selectedRows.includes(index)) {
         setSelectedRows(selectedRows.filter((row) => row !== index));
       } else {
         setSelectedRows([...selectedRows, index]);
       }
     } else if (event.shiftKey && lastClickedRowIndex !== null) {
-      // Shiftキーが押されており、前回クリックした行が存在する場合
       const start = Math.min(index, lastClickedRowIndex);
       const end = Math.max(index, lastClickedRowIndex);
       const range = Array.from(
@@ -60,7 +146,6 @@ export default function BlockTable(props: { data: BlockType[] }) {
       );
       setSelectedRows(range);
     } else {
-      // 単一選択の場合
       setSelectedRows([index]);
     }
 
@@ -70,7 +155,6 @@ export default function BlockTable(props: { data: BlockType[] }) {
   const handleHeaderClick = (columnId: 'id' | 'name' | 'registeredTime') => {
     const updatedColumns = columns.map((column) => {
       if (column.id === columnId) {
-        // クリックされた列のソート状態を切り替える
         let newSortOrder: SortOrder;
         if (column.sortOrder === SortOrder.ASCENDING) {
           newSortOrder = SortOrder.DESCENDING;
@@ -81,18 +165,16 @@ export default function BlockTable(props: { data: BlockType[] }) {
         }
         return { ...column, sortOrder: newSortOrder };
       }
-      // クリックされた列以外はソート状態を保持する
       return column;
     });
 
     setColumns(updatedColumns);
-    // ソート処理を実行する
 
-    const sortedUsers = [...props.data]; // ソート前のデータをコピーする
-
+    const sortedUsers = [...props.data];
     const columnToSort = updatedColumns.find(
       (column) => column.id === columnId
     );
+
     if (columnToSort?.sortOrder === SortOrder.ASCENDING) {
       sortedUsers.sort((a, b) => (a[columnId] > b[columnId] ? 1 : -1));
     } else if (columnToSort?.sortOrder === SortOrder.DESCENDING) {
@@ -100,15 +182,6 @@ export default function BlockTable(props: { data: BlockType[] }) {
     }
 
     setRows(sortedUsers);
-  };
-  const renderSortArrow = (column: Column): React.ReactNode => {
-    if (column.sortOrder === SortOrder.ASCENDING) {
-      return <span>&#9650;</span>; // ▲
-    } else if (column.sortOrder === SortOrder.DESCENDING) {
-      return <span>&#9660;</span>; // ▼
-    } else {
-      return null;
-    }
   };
 
   const handlePrevPage = () => {
@@ -126,8 +199,6 @@ export default function BlockTable(props: { data: BlockType[] }) {
   const canGoPrevPage = currentPage > 0;
   const canGoNextPage = currentPage < totalPages - 1;
 
-  console.log(columns.length % pageSize);
-
   return (
     <>
       <table
@@ -135,50 +206,41 @@ export default function BlockTable(props: { data: BlockType[] }) {
         cellSpacing={0}
         style={{
           userSelect: 'none',
-          // borderCollapse: 'collapse',
-          // border: '1px solid black',
         }}
       >
         <thead>
           <tr>
             {columns.map((column) => (
-              <th key={column.id} onClick={() => handleHeaderClick(column.id)}>
-                {column.label} {renderSortArrow(column)}
-              </th>
+              <Header
+                key={column.id}
+                column={column}
+                handleHeaderClick={handleHeaderClick}
+              />
             ))}
           </tr>
         </thead>
         <tbody>
           {displayedRows.map((user, index) => (
-            <tr
+            <Row
               key={user.id}
-              style={selectedRows.includes(index) ? selectedRowStyle : rowStyle}
-              onClick={(event) => handleRowClick(index, event)}
-            >
-              <td>{user.id}</td>
-              <td>{user.name}</td>
-              <td>{user.registeredTime}</td>
-            </tr>
+              user={user}
+              index={index}
+              selectedRows={selectedRows}
+              handleRowClick={handleRowClick}
+            />
           ))}
         </tbody>
       </table>
-      {/* ページ移動ボタン */}
-      <div
-        style={{
-          marginTop: '10px',
-          textAlign: 'start',
-        }}
-      >
-        <button onClick={handlePrevPage} disabled={!canGoPrevPage}>
-          {'< 前へ'}
-        </button>
-        <span style={{ margin: '0 10px' }}>
-          Page {currentPage + 1} of {totalPages}
-        </span>
-        <button onClick={handleNextPage} disabled={!canGoNextPage}>
-          {'次へ >'}
-        </button>
-      </div>
+      <Pagination
+        currentPage={currentPage}
+        totalPages={totalPages}
+        handlePrevPage={handlePrevPage}
+        handleNextPage={handleNextPage}
+        canGoPrevPage={canGoPrevPage}
+        canGoNextPage={canGoNextPage}
+      />
     </>
   );
-}
+};
+
+export default BlockTable;
