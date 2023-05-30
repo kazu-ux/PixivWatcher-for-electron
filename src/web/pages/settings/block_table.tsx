@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import React, { useState } from 'react';
 import { BlockType } from '../../types/type';
 
 enum SortOrder {
@@ -37,12 +37,7 @@ interface PaginationProps {
   canGoNextPage: boolean;
 }
 
-const Row: React.FC<RowProps> = ({
-  user,
-  index,
-  selectedRows,
-  handleRowClick,
-}: RowProps) => {
+const Row = ({ user, index, selectedRows, handleRowClick }: RowProps) => {
   const rowStyle = {
     cursor: 'pointer',
   };
@@ -69,10 +64,7 @@ const Row: React.FC<RowProps> = ({
   );
 };
 
-const Header: React.FC<HeaderProps> = ({
-  column,
-  handleHeaderClick,
-}: HeaderProps) => {
+const Header = ({ column, handleHeaderClick }: HeaderProps) => {
   const renderSortArrow = (column: Column): React.ReactNode => {
     if (column.sortOrder === SortOrder.ASCENDING) {
       return <span>&#9650;</span>; // ▲
@@ -90,7 +82,7 @@ const Header: React.FC<HeaderProps> = ({
   );
 };
 
-const Pagination: React.FC<PaginationProps> = ({
+const Pagination = ({
   currentPage,
   totalPages,
   handlePrevPage,
@@ -113,9 +105,7 @@ const Pagination: React.FC<PaginationProps> = ({
   );
 };
 
-const BlockTable: React.FC<{ data: BlockType[] }> = (props: {
-  data: BlockType[];
-}) => {
+const BlockTable = (props: { data: BlockType[] }) => {
   const [rows, setRows] = useState(props.data);
   const [selectedRows, setSelectedRows] = useState<number[]>([]);
   const [lastClickedRowIndex, setLastClickedRowIndex] = useState<number | null>(
@@ -130,6 +120,12 @@ const BlockTable: React.FC<{ data: BlockType[] }> = (props: {
   const [currentPage, setCurrentPage] = useState<number>(0);
   const pageSize = 10; // ページあたりの行数
   const totalPages = Math.ceil(rows.length / pageSize);
+
+  const handleClick = (event: React.MouseEvent) => {
+    const className = (event.target as HTMLElement).className;
+    if (!(className === 'table_container')) return;
+    setSelectedRows([]);
+  };
 
   const handleRowClick = (
     index: number,
@@ -188,6 +184,14 @@ const BlockTable: React.FC<{ data: BlockType[] }> = (props: {
     setRows(sortedUsers);
   };
 
+  const handleDelete = () => {
+    const updatedRows = rows.filter(
+      (_, index) => !selectedRows.includes(index)
+    );
+    setRows(updatedRows);
+    setSelectedRows([]);
+  };
+
   const handlePrevPage = () => {
     setCurrentPage((prevPage) => Math.max(prevPage - 1, 0));
   };
@@ -204,37 +208,45 @@ const BlockTable: React.FC<{ data: BlockType[] }> = (props: {
   const canGoNextPage = currentPage < totalPages - 1;
 
   return (
-    <>
-      <table
-        border={1}
-        cellSpacing={0}
-        style={{
-          userSelect: 'none',
-        }}
-      >
-        <thead>
-          <tr>
-            {columns.map((column) => (
-              <Header
-                key={column.id}
-                column={column}
-                handleHeaderClick={handleHeaderClick}
+    <div onClick={handleClick}>
+      <div className='table_container' style={{ display: 'flex' }}>
+        <table
+          border={1}
+          cellSpacing={0}
+          style={{
+            userSelect: 'none',
+          }}
+        >
+          <thead>
+            <tr>
+              {columns.map((column) => (
+                <Header
+                  key={column.id}
+                  column={column}
+                  handleHeaderClick={handleHeaderClick}
+                />
+              ))}
+            </tr>
+          </thead>
+          <tbody>
+            {displayedRows.map((user, index) => (
+              <Row
+                key={user.id}
+                user={user}
+                index={index}
+                selectedRows={selectedRows}
+                handleRowClick={handleRowClick}
               />
             ))}
-          </tr>
-        </thead>
-        <tbody>
-          {displayedRows.map((user, index) => (
-            <Row
-              key={user.id}
-              user={user}
-              index={index}
-              selectedRows={selectedRows}
-              handleRowClick={handleRowClick}
-            />
-          ))}
-        </tbody>
-      </table>
+          </tbody>
+        </table>
+        {selectedRows.length > 0 && (
+          <div style={{ marginTop: '10px', textAlign: 'start' }}>
+            <button onClick={handleDelete}>削除</button>
+          </div>
+        )}
+      </div>
+
       <Pagination
         currentPage={currentPage}
         totalPages={totalPages}
@@ -243,7 +255,7 @@ const BlockTable: React.FC<{ data: BlockType[] }> = (props: {
         canGoPrevPage={canGoPrevPage}
         canGoNextPage={canGoNextPage}
       />
-    </>
+    </div>
   );
 };
 
