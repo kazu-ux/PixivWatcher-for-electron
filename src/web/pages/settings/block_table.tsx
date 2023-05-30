@@ -14,12 +14,6 @@ interface Column {
 }
 
 export default function BlockTable(props: { data: BlockType[] }) {
-  const sampleUsers = [
-    { id: 123, name: 'のび太', registeredTime: 10000 },
-    { id: 456, name: 'ドラえもん', registeredTime: 20000 },
-    { id: 111, name: 'しずか', registeredTime: 30000 },
-  ];
-
   const [rows, setRows] = useState(props.data);
   const [selectedRows, setSelectedRows] = useState<number[]>([]);
   const [lastClickedRowIndex, setLastClickedRowIndex] = useState<number | null>(
@@ -30,6 +24,11 @@ export default function BlockTable(props: { data: BlockType[] }) {
     { id: 'name', label: 'User Name', sortOrder: SortOrder.NONE },
     { id: 'registeredTime', label: '登録日時', sortOrder: SortOrder.NONE },
   ]);
+
+  const [currentPage, setCurrentPage] = useState<number>(0);
+  const pageSize = 10; // ページあたりの行数
+
+  const totalPages = Math.ceil(rows.length / pageSize);
 
   const rowStyle = {
     cursor: 'pointer',
@@ -112,42 +111,74 @@ export default function BlockTable(props: { data: BlockType[] }) {
     }
   };
 
+  const handlePrevPage = () => {
+    setCurrentPage((prevPage) => Math.max(prevPage - 1, 0));
+  };
+
+  const handleNextPage = () => {
+    setCurrentPage((prevPage) => Math.min(prevPage + 1, totalPages - 1));
+  };
+
+  const startIndex = currentPage * pageSize;
+  const endIndex = startIndex + pageSize;
+  const displayedRows = rows.slice(startIndex, endIndex);
+
+  const canGoPrevPage = currentPage > 0;
+  const canGoNextPage = currentPage < totalPages - 1;
+
+  console.log(columns.length % pageSize);
+
   return (
-    <table
-      border={1}
-      cellSpacing={0}
-      style={{
-        userSelect: 'none',
-        // borderCollapse: 'collapse',
-        // border: '1px solid black',
-      }}
-    >
-      <thead>
-        <tr>
-          {columns.map((column) => (
-            <th
-              key={column.id}
-              // style={cellStyle}
-              onClick={() => handleHeaderClick(column.id)}
-            >
-              {column.label} {renderSortArrow(column)}
-            </th>
-          ))}
-        </tr>
-      </thead>
-      <tbody>
-        {rows.map((user, index) => (
-          <tr
-            key={user.id}
-            style={selectedRows.includes(index) ? selectedRowStyle : rowStyle}
-            onClick={(event) => handleRowClick(index, event)}
-          >
-            <td>{user.id}</td>
-            <td>{user.name}</td>
-            <td>{user.registeredTime}</td>
+    <>
+      <table
+        border={1}
+        cellSpacing={0}
+        style={{
+          userSelect: 'none',
+          // borderCollapse: 'collapse',
+          // border: '1px solid black',
+        }}
+      >
+        <thead>
+          <tr>
+            {columns.map((column) => (
+              <th key={column.id} onClick={() => handleHeaderClick(column.id)}>
+                {column.label} {renderSortArrow(column)}
+              </th>
+            ))}
           </tr>
-        ))}
-      </tbody>
-    </table>
+        </thead>
+        <tbody>
+          {displayedRows.map((user, index) => (
+            <tr
+              key={user.id}
+              style={selectedRows.includes(index) ? selectedRowStyle : rowStyle}
+              onClick={(event) => handleRowClick(index, event)}
+            >
+              <td>{user.id}</td>
+              <td>{user.name}</td>
+              <td>{user.registeredTime}</td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+      {/* ページ移動ボタン */}
+      <div
+        style={{
+          marginTop: '10px',
+          textAlign: 'start',
+        }}
+      >
+        <button onClick={handlePrevPage} disabled={!canGoPrevPage}>
+          {'< 前へ'}
+        </button>
+        <span style={{ margin: '0 10px' }}>
+          Page {currentPage + 1} of {totalPages}
+        </span>
+        <button onClick={handleNextPage} disabled={!canGoNextPage}>
+          {'次へ >'}
+        </button>
+      </div>
+    </>
   );
 }
