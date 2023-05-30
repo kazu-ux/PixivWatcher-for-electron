@@ -1,16 +1,15 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { BlockType } from '../../types/type';
 
 enum SortOrder {
   ASCENDING = 'asc',
   DESCENDING = 'desc',
-  NONE = 'none',
 }
 
 interface Column {
   id: 'id' | 'name' | 'registeredTime';
   label: string;
-  sortOrder: SortOrder;
+  sortOrder: SortOrder | null;
 }
 
 interface RowProps {
@@ -105,17 +104,32 @@ const Pagination = ({
   );
 };
 
-const BlockTable = (props: { data: BlockType[] }) => {
-  const [rows, setRows] = useState(props.data);
+const BlockTable = (props: {
+  columns: { id: string; label: string }[];
+  data: BlockType[];
+}) => {
+  const [rows, setRows] = useState<BlockType[]>([]);
   const [selectedRows, setSelectedRows] = useState<number[]>([]);
   const [lastClickedRowIndex, setLastClickedRowIndex] = useState<number | null>(
     null
   );
   const [columns, setColumns] = useState<Column[]>([
-    { id: 'id', label: 'User ID', sortOrder: SortOrder.NONE },
-    { id: 'name', label: 'User Name', sortOrder: SortOrder.NONE },
-    { id: 'registeredTime', label: '登録日時', sortOrder: SortOrder.NONE },
+    { id: 'id', label: props.columns[0].label, sortOrder: null },
+    { id: 'name', label: props.columns[1].label, sortOrder: null },
+    {
+      id: 'registeredTime',
+      label: '登録日時',
+      sortOrder: SortOrder.DESCENDING,
+    },
   ]);
+
+  useEffect(() => {
+    const sortedUsers = [...props.data];
+    sortedUsers.sort((a, b) =>
+      a['registeredTime'] < b['registeredTime'] ? 1 : -1
+    );
+    setRows(sortedUsers);
+  }, [props.data]);
 
   const [currentPage, setCurrentPage] = useState<number>(0);
   const pageSize = 10; // ページあたりの行数
@@ -158,14 +172,12 @@ const BlockTable = (props: { data: BlockType[] }) => {
         let newSortOrder: SortOrder;
         if (column.sortOrder === SortOrder.ASCENDING) {
           newSortOrder = SortOrder.DESCENDING;
-        } else if (column.sortOrder === SortOrder.DESCENDING) {
-          newSortOrder = SortOrder.NONE;
         } else {
           newSortOrder = SortOrder.ASCENDING;
         }
         return { ...column, sortOrder: newSortOrder };
       }
-      return column;
+      return { ...column, sortOrder: null };
     });
 
     setColumns(updatedColumns);
