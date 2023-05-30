@@ -27,6 +27,9 @@ export const updateBlockUserAtom = atom(
     set(updateWorksAtom, get(filteredWorksAtom));
   }
 );
+export const deleteBlockUserAtom = atom(null, (_, set, users: BlockType[]) => {
+  set(blockUsersAtom, users);
+});
 
 const blockTagsAtom = atomWithStorage<BlockType[]>('blockTags', []);
 export const updateBlockTagAtom = atom(
@@ -41,6 +44,9 @@ export const updateBlockTagAtom = atom(
     set(updateWorksAtom, get(filteredWorksAtom));
   }
 );
+export const deleteBlockTagAtom = atom(null, (_, set, tags: BlockType[]) => {
+  set(blockTagsAtom, tags);
+});
 
 const worksAtom = atomWithStorage<WorkData[]>('worksData', []);
 export const filteredWorksAtom = atom((get) => get(worksAtom));

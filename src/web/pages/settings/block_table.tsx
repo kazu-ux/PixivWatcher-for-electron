@@ -1,5 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { BlockType } from '../../types/type';
+import { useAtom } from 'jotai';
+import { deleteBlockTagAtom, deleteBlockUserAtom } from '../../atoms/atom';
 
 enum SortOrder {
   ASCENDING = 'asc',
@@ -107,6 +109,7 @@ const Pagination = ({
 const BlockTable = (props: {
   columns: { id: string; label: string }[];
   data: BlockType[];
+  blockTarget: 'user' | 'tag';
 }) => {
   const [rows, setRows] = useState<BlockType[]>([]);
   const [selectedRows, setSelectedRows] = useState<number[]>([]);
@@ -122,6 +125,9 @@ const BlockTable = (props: {
       sortOrder: SortOrder.DESCENDING,
     },
   ]);
+
+  const [, deleteBlockUser] = useAtom(deleteBlockUserAtom);
+  const [, deleteBlockTag] = useAtom(deleteBlockTagAtom);
 
   useEffect(() => {
     const sortedUsers = [...props.data];
@@ -202,6 +208,11 @@ const BlockTable = (props: {
     );
     setRows(updatedRows);
     setSelectedRows([]);
+    if (props.blockTarget === 'user') {
+      deleteBlockUser(updatedRows);
+    } else {
+      deleteBlockTag(updatedRows);
+    }
   };
 
   const handlePrevPage = () => {

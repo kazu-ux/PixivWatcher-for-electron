@@ -140,13 +140,21 @@ const Settings = () => {
       <div className='block_user_container'>
         <div>ブロックするユーザー</div>
         <div className='block_table'>
-          <BlockTable columns={userColumns} data={blockUsers} />
+          <BlockTable
+            columns={userColumns}
+            data={blockUsers}
+            blockTarget={'user'}
+          />
         </div>
       </div>
       <div className='block_tag_container'>
         <div>ブロックするタグ</div>
         <div className='block_table'>
-          <BlockTable columns={tagColumns} data={blockTags} />
+          <BlockTable
+            columns={tagColumns}
+            data={blockTags}
+            blockTarget={'tag'}
+          />
         </div>
       </div>
     </Box>
