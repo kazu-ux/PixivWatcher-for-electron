@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import { useCallback, useEffect, useRef } from 'react';
 import './work_list.css';
 
 import { useAtom } from 'jotai';
@@ -17,7 +17,7 @@ export default function WorkList() {
   const ref = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    console.log(currentURL);
+    window.scrollTo(0, 0);
     ref.current
       ?.querySelectorAll('.viewed')
       .forEach((element) => element.classList.add('hidden'));
@@ -25,8 +25,6 @@ export default function WorkList() {
 
   const mutationObserverCallback = useCallback(
     (records: MutationRecord[]) => {
-      console.log('mutationobserver');
-
       const watchWorkId = getWatchWorkId();
       if (!watchWorkId) return;
 
@@ -48,18 +46,6 @@ export default function WorkList() {
     childList: true,
     subtree: false,
   });
-
-  const watchWorkId = getWatchWorkId();
-
-  useEffect(() => {
-    console.log('workdata');
-
-    // window.scrollTo(0, 0);
-    if (!watchWorkId) return;
-    // ref.current
-    //   ?.querySelectorAll('.viewed')
-    //   .forEach((element) => element.classList.add('hidden'));
-  }, [workData]);
 
   return (
     <div

@@ -3,15 +3,12 @@ import { memo, useEffect, useRef, useState } from 'react';
 import { useAtom } from 'jotai';
 import {
   updateBlockTagAtom,
-  // blockTagsAtom,
   updateBlockUserAtom,
-  // favoritesAtom,
   updateWorksAtom,
   addWatchedAtom,
   updateFeedWorkAtom,
 } from '../../atoms/atom';
 import { WorkData } from '../../types/type';
-import { produce } from 'immer';
 import { useOnScreen } from '../../customHooks/useOnScreen';
 import getWatchWorkId from '../../utils/getWatchWorkId';
 
@@ -37,8 +34,6 @@ function WorkCard(props: { workData: WorkData }) {
     if (!watchWorkId) return;
 
     addWatched(watchWorkId, workData);
-
-    // ref.current?.parentElement?.classList.add('viewed');
   };
 
   const handleBlockUser = (userName: string, userId: string) => {
@@ -70,26 +65,10 @@ function WorkCard(props: { workData: WorkData }) {
     if (target === 'ABOVE_VIEWPORT') {
       const watchWorkId = getWatchWorkId();
       if (!watchWorkId) return;
-      // console.log(workData);
-      addWatched(watchWorkId, workData);
 
-      // updateWorks([workData]);
-      // ref.current?.parentElement?.classList.add('viewed');
+      addWatched(watchWorkId, workData);
     }
   }, [target]);
-
-  // const [isVisible, setIsVisible] = useState(false);
-
-  // const toggleVisibility = () => {
-  //   console.log(isVisible);
-
-  //   window.scrollY > 500 ? setIsVisible(true) : setIsVisible(false);
-  // };
-
-  // useEffect(() => {
-  //   window.addEventListener('scroll', toggleVisibility);
-  //   return () => window.removeEventListener('scroll', toggleVisibility);
-  // }, []);
 
   return (
     <div

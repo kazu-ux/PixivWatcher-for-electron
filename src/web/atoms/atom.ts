@@ -7,7 +7,6 @@ import {
   WatchWork,
   WatchWorks,
   WorkData,
-  viewedWorks,
 } from '../types/type';
 import { produce } from 'immer';
 

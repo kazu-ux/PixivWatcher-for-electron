@@ -69,8 +69,6 @@ export type WatchWorks = {
   [id: string]: WatchWork;
 };
 
-export type viewedWorks = { [key: string]: string[] };
-
 type SearchTargetPath = 'artworks' | 'illustrations' | 'manga' | 'novel';
 type SearchTargetParameter =
   | 'all'
