@@ -52,6 +52,8 @@ const Row: React.FC<RowProps> = ({
     cursor: 'pointer',
   };
 
+  const dateTime = new Date(user.registeredTime);
+
   return (
     <tr
       key={user.id}
@@ -60,7 +62,9 @@ const Row: React.FC<RowProps> = ({
     >
       <td>{user.id}</td>
       <td>{user.name}</td>
-      <td>{user.registeredTime}</td>
+      <td>
+        {dateTime.toLocaleDateString() + ' ' + dateTime.toLocaleTimeString()}
+      </td>
     </tr>
   );
 };
