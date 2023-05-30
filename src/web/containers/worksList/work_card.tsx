@@ -4,9 +4,7 @@ import { useAtom } from 'jotai';
 import {
   updateBlockTagAtom,
   updateBlockUserAtom,
-  updateWorksAtom,
   addWatchedAtom,
-  updateFeedWorkAtom,
 } from '../../atoms/atom';
 import { WorkData } from '../../types/type';
 import { useOnScreen } from '../../customHooks/useOnScreen';
@@ -16,9 +14,8 @@ function WorkCard(props: { workData: WorkData }) {
   const { workData } = props;
   const [expanded, setExpanded] = useState(false);
 
-  const [blockUsers, updateBlockUser] = useAtom(updateBlockUserAtom);
-  const [blockTags, updateBlockTag] = useAtom(updateBlockTagAtom);
-  const [, updateWorks] = useAtom(updateWorksAtom);
+  const [, updateBlockUser] = useAtom(updateBlockUserAtom);
+  const [, updateBlockTag] = useAtom(updateBlockTagAtom);
   const [, addWatched] = useAtom(addWatchedAtom);
 
   const itemURL = `https://www.pixiv.net/artworks/${workData.id}`;
