@@ -56,6 +56,17 @@ const Settings = () => {
   const handleClose = () => {
     setState({ open: false, vertical: 'top', horizontal: 'right' });
   };
+  const userColumns = [
+    { id: 'id', label: 'ユーザーID' },
+    { id: 'name', label: 'ユーザー名' },
+    { id: 'registeredTime', label: '登録日時' },
+  ];
+
+  const tagColumns = [
+    { id: 'id', label: 'タグID' },
+    { id: 'name', label: 'タグ名' },
+    { id: 'registeredTime', label: '登録日時' },
+  ];
 
   return (
     <Box>
@@ -129,13 +140,13 @@ const Settings = () => {
       <div className='block_user_container'>
         <div>ブロックするユーザー</div>
         <div className='block_table'>
-          <BlockTable data={blockUsers} />
+          <BlockTable columns={userColumns} data={blockUsers} />
         </div>
       </div>
       <div className='block_tag_container'>
         <div>ブロックするタグ</div>
         <div className='block_table'>
-          <BlockTable data={blockTags} />
+          <BlockTable columns={tagColumns} data={blockTags} />
         </div>
       </div>
     </Box>
