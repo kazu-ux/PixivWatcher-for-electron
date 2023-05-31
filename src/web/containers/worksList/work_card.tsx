@@ -9,7 +9,6 @@ import {
 import { WorkData } from '../../types/type';
 import { useOnScreen } from '../../customHooks/useOnScreen';
 import getWatchWorkId from '../../utils/getWatchWorkId';
-import useInterval from '../../customHooks/useInterval';
 
 function WorkCard(props: { workData: WorkData }) {
   const { workData } = props;
@@ -24,6 +23,7 @@ function WorkCard(props: { workData: WorkData }) {
   const baseTagsURL = 'https://www.pixiv.net/tags/';
 
   const ref = useRef<HTMLDivElement>(null);
+  const target = useOnScreen(ref);
 
   const handleExpandClick = () => setExpanded(!expanded);
 
@@ -54,21 +54,15 @@ function WorkCard(props: { workData: WorkData }) {
     });
   };
 
-  /*   const hasDuplicateElements = (arr1: string[], arr2: string[]): boolean =>
-    arr1.some((element) => arr2.includes(element)); */
-  const target = useOnScreen(ref);
+  useEffect(() => {
+    if (!ref.current) return;
+    if (target === 'ABOVE_VIEWPORT') {
+      const watchWorkId = getWatchWorkId();
+      if (!watchWorkId) return;
 
-  useInterval(() => {
-    const element = ref.current; // 対象の要素を取得
-    if (element) {
-      const rect = element.getBoundingClientRect(); // 要素の座標を取得
-      if (rect.top < -100) {
-        const watchWorkId = getWatchWorkId();
-        if (!watchWorkId) return;
-        addWatched(watchWorkId, workData);
-      }
+      addWatched(watchWorkId, workData);
     }
-  }, 1000);
+  }, [target]);
 
   return (
     <div

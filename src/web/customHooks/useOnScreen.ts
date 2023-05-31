@@ -12,7 +12,7 @@ export function useOnScreen(targetRef: React.RefObject<HTMLElement>) {
 
   const observer = new IntersectionObserver(
     ([entry]) => {
-      if (entry.boundingClientRect.top > 0) return;
+      if (entry.boundingClientRect.top > -1) return;
       setTargetViewPosition('ABOVE_VIEWPORT'); // 画面より上に表示中
     },
     {
