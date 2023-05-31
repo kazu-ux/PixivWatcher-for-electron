@@ -121,8 +121,9 @@ const MyAccordion = () => {
                         }}
                       >
                         {
-                          watchWork.workData.filter((work) => !work.isWatched)
-                            .length
+                          watchWork.workData
+                            .filter((work) => !work.isBlocked)
+                            .filter((work) => !work.isWatched).length
                         }
                       </div>
                     )}

@@ -9,6 +9,7 @@ import {
 import { WorkData } from '../../types/type';
 import { useOnScreen } from '../../customHooks/useOnScreen';
 import getWatchWorkId from '../../utils/getWatchWorkId';
+import useInterval from '../../customHooks/useInterval';
 
 function WorkCard(props: { workData: WorkData }) {
   const { workData } = props;
@@ -57,15 +58,17 @@ function WorkCard(props: { workData: WorkData }) {
     arr1.some((element) => arr2.includes(element)); */
   const target = useOnScreen(ref);
 
-  useEffect(() => {
-    if (!ref.current) return;
-    if (target === 'ABOVE_VIEWPORT') {
-      const watchWorkId = getWatchWorkId();
-      if (!watchWorkId) return;
-
-      addWatched(watchWorkId, workData);
+  useInterval(() => {
+    const element = ref.current; // 対象の要素を取得
+    if (element) {
+      const rect = element.getBoundingClientRect(); // 要素の座標を取得
+      if (rect.top < -100) {
+        const watchWorkId = getWatchWorkId();
+        if (!watchWorkId) return;
+        addWatched(watchWorkId, workData);
+      }
     }
-  }, [target]);
+  }, 1000);
 
   return (
     <div

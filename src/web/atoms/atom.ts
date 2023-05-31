@@ -1,4 +1,4 @@
-import { atom } from 'jotai';
+import { atom, useAtom } from 'jotai';
 import { atomWithStorage } from 'jotai/utils';
 
 import {
@@ -25,10 +25,13 @@ export const updateBlockUserAtom = atom(
     const newBlockUsers = [...get(blockUsersAtom), ...[user]];
     set(blockUsersAtom, newBlockUsers);
     set(updateWorksAtom, get(filteredWorksAtom));
+
+    set(addBlockFlagAllFeedWorksAtom);
   }
 );
 export const deleteBlockUserAtom = atom(null, (_, set, users: BlockType[]) => {
   set(blockUsersAtom, users);
+  set(addBlockFlagAllFeedWorksAtom);
 });
 
 const blockTagsAtom = atomWithStorage<BlockType[]>('blockTags', []);
@@ -42,10 +45,12 @@ export const updateBlockTagAtom = atom(
     const newBlockTags = [...get(blockTagsAtom), ...[tag]];
     set(blockTagsAtom, newBlockTags);
     set(updateWorksAtom, get(filteredWorksAtom));
+    set(addBlockFlagAllFeedWorksAtom);
   }
 );
 export const deleteBlockTagAtom = atom(null, (_, set, tags: BlockType[]) => {
   set(blockTagsAtom, tags);
+  set(addBlockFlagAllFeedWorksAtom);
 });
 
 const worksAtom = atomWithStorage<WorkData[]>('worksData', []);
@@ -62,7 +67,7 @@ export const updateWorksAtom = atom(
     const filteredWokrs: WorkData[] = works.map((work) =>
       hasDuplicateElements([work.userId], blockUsers) ||
       hasDuplicateElements(work.tags, blockTags)
-        ? { ...work, isBlocked: true, isWatched: true }
+        ? { ...work, isBlocked: true }
         : { ...work, isBlocked: false }
     );
     set(worksAtom, filteredWokrs);
@@ -116,6 +121,29 @@ export const updateFeedWorkAtom = atom(
     set(feedWorksAtom, newWatchWorks);
   }
 );
+const addBlockFlagAllFeedWorksAtom = atom(null, (get, set) => {
+  console.log(get(feedWorksAtom));
+
+  const newFeedWorks = produce(get(feedWorksAtom), (draft) => {
+    const keys = Object.keys(draft);
+    keys.forEach((key) => {
+      const oldWorks = draft[key].workData;
+      const hasDuplicateElements = (arr1: string[], arr2: string[]): boolean =>
+        arr1.some((element) => arr2.includes(element));
+      const blockUsers = get(blockUsersAtom).map((user) => user.id.toString());
+      const blockTags = get(blockTagsAtom).map((tag) => tag.name);
+
+      const filteredWokrs: WorkData[] = oldWorks.map((work) =>
+        hasDuplicateElements([work.userId], blockUsers) ||
+        hasDuplicateElements(work.tags, blockTags)
+          ? { ...work, isBlocked: true }
+          : { ...work, isBlocked: false }
+      );
+      draft[key].workData = filteredWokrs;
+    });
+  });
+  set(feedWorksAtom, newFeedWorks);
+});
 
 export const searchQueryAtom = atom<SearchQuery>({
   searchWord: '',
